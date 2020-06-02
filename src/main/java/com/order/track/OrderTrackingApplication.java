@@ -1,4 +1,4 @@
-package com.ordertracking.OrderTrackingApplication;
+package com.order.track;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
