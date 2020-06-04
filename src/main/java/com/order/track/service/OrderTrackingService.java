@@ -10,7 +10,7 @@ public class OrderTrackingService {
 
 	public Data buildApiResponse(String orderNumber) {
 		Order order=loadOrder(orderNumber);
-		return null;
+		return new Data();
 		
 	}
 

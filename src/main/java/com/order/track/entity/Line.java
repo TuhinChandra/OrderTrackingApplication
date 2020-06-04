@@ -2,14 +2,14 @@ package com.order.track.entity;
 
 import java.util.List;
 
-import javax.persistence.Entity;
+//import javax.persistence.Entity;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-@Entity
+//@Entity
 public class Line {
 
 	private String lineNo;
