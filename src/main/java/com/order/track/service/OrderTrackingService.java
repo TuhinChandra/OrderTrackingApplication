@@ -34,11 +34,11 @@ public class OrderTrackingService {
 			final FulfillmentEvent fulfillmentEvent = new FulfillmentEvent(status, Integer.parseInt(quantity), null,
 					refernceNumber, null);
 			final List<Line> lines = order.getLineItems();
-			final Line line = order.getLineItems().stream().filter(e -> e.getLineNo() == lineNumber).findFirst()
-					.orElse(null);
+			Line line = order.getLineItems().stream().filter(e -> e.getLineNo() == lineNumber).findFirst().orElse(null);
 			if (null == line) {
-				final Line newLine = new Line(lineNumber, status, order, Arrays.asList(fulfillmentEvent));
-				lines.add(newLine);
+				line = new Line(lineNumber, status, order, Arrays.asList(fulfillmentEvent));
+				lines.add(line);
+				order.setLineItems(lines);
 			} else {
 				line.getFulfillmentEvents().add(fulfillmentEvent);
 			}
