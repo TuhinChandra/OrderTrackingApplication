@@ -17,7 +17,7 @@ public class OrderTrackingService {
     @Autowired
     private OrderRepository orderRepository;
 
-    public Order buildApiResponse(final String orderNumber) {
+    public Order loadOrder(final String orderNumber) {
 	return loadOrder(Long.parseLong(orderNumber));
     }
 
@@ -26,7 +26,7 @@ public class OrderTrackingService {
     }
 
     public Order fulfilOrder(final String orderId, final String lineNo, final String status, final String quantity,
-	    final String refernceNumber) {
+	    final String refernceNumber, String itemCategory) {
 	final Long orderNumber = Long.parseLong(orderId);
 	final Long lineNumber = Long.parseLong(lineNo);
 	Order order = loadOrder(orderNumber);
@@ -36,10 +36,11 @@ public class OrderTrackingService {
 	    final List<Line> lines = order.getLineItems();
 	    Line line = order.getLineItems().stream().filter(e -> e.getLineNo() == lineNumber).findFirst().orElse(null);
 	    if (null == line) {
-		line = new Line(lineNumber, status, order, Arrays.asList(fulfillmentEvent));
+		line = new Line(lineNumber, status, order, itemCategory, Arrays.asList(fulfillmentEvent));
 		lines.add(line);
 		order.setLineItems(lines);
 	    } else {
+		line.setCurrentStatus(status);
 		line.getFulfillmentEvents().add(fulfillmentEvent);
 	    }
 	    fulfillmentEvent.setLine(line);
@@ -49,7 +50,7 @@ public class OrderTrackingService {
 	    order.setOrderId(orderNumber);
 	    final FulfillmentEvent fulfillmentEvent = new FulfillmentEvent(status, Integer.parseInt(quantity), null,
 		    refernceNumber, null);
-	    final Line line = new Line(lineNumber, status, order, Arrays.asList(fulfillmentEvent));
+	    final Line line = new Line(lineNumber, status, order, itemCategory, Arrays.asList(fulfillmentEvent));
 	    order.setLineItems(Arrays.asList(line));
 	    fulfillmentEvent.setLine(line);
 	}

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mappings
+	xmlns="http://dozermapper.github.io/schema/bean-mapping"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://dozermapper.github.io/schema/bean-mapping http://dozermapper.github.io/schema/bean-mapping.xsd">
+	<mapping>
+		<class-a>com.order.track.entity.Order</class-a>
+		<class-b>com.order.track.model.TrackOrder</class-b>
+		<field>
+			<a>orderId</a>
+			<b>data.id</b>
+		</field>
+		<field>
+			<a>lineItems</a>
+			<b>data.attributes</b>
+			<a-hint>com.order.track.entity.Line</a-hint>
+			<b-hint>com.order.track.model.Attributes</b-hint>
+		</field>
+	</mapping>
+	<mapping>
+		<class-a>com.order.track.entity.Line</class-a>
+		<class-b>com.order.track.model.Attributes</class-b>
+		<field>
+			<a>fulfillmentEvents</a>
+			<b>lifeCycles</b>
+		</field>
+	</mapping>
+</mappings>
