@@ -1,0 +1,62 @@
+{
+   "data":{
+      "type":"order",
+      "id":"SAP Order ID",
+      "attributes":[
+         {
+            "lineNo":1,
+            "currentStatus":"On the way",
+            "trackingUrl":"https://www.parcelforce.com/track-trace?trackNumber=SF3778426001",
+            "lifeCycles":[
+               {
+                  "status":"Placed",
+                  "qty":1,
+                  "ordering":1,
+                  "refernceType":"",
+                  "refernceNumber":"",
+                  "completed":true
+               },
+               {
+                  "status":"In Progress",
+                  "qty":1,
+                  "ordering":2,
+                  "refernceType":"delivery",
+                  "refernceNumber":"123",
+                  "completed":true
+               },
+               {
+                  "status":"On the way",
+                  "qty":1,
+                  "ordering":3,
+                  "refernceType":"tracking",
+                  "refernceNumber":"tracking",
+                  "completed":false
+               }
+           ]
+         },
+         {
+            "lineNo":2,
+            "currentStatus":"Placed",
+            "trackingUrl":"",
+            "lifeCycles":[
+               {
+                  "status":"Placed",
+                  "qty":1,
+                  "ordering":1,
+                  "refernceType":"",
+                  "refernceNumber":"",
+                  "completed":true
+               },
+               {
+                  "status":"In Progress",
+                  "qty":1,
+                  "ordering":2,
+                  "refernceType":"purchaseOrder",
+                  "refernceNumber":"123",
+                  "completed":true
+               }
+           ]
+         }
+      ]
+   }
+}
