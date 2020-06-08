@@ -13,7 +13,6 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -38,14 +37,14 @@ public class Line {
 	@OneToMany(mappedBy = "line", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<FulfillmentEvent> fulfillmentEvents;
 
-	public Line(final Long lineNo, final String currentStatus, final Order order,String itemCategory,
+	public Line(final Long lineNo, final String currentStatus, final Order order, final String itemCategory,
 			final List<FulfillmentEvent> fulfillmentEvents) {
 		super();
 		this.lineNo = lineNo;
 		this.currentStatus = currentStatus;
 		this.order = order;
 		this.fulfillmentEvents = fulfillmentEvents;
-		this.itemCategory=itemCategory;
+		this.itemCategory = itemCategory;
 	}
 
 }

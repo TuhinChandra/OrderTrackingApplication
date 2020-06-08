@@ -16,25 +16,25 @@ import com.order.track.transformer.OrderTrackingTransformer;
 @Service
 public class OrderTrackingAdapter {
 
-    @Autowired
-    private OrderTrackingService orderTrackingService;
-    @Autowired
-    private OrderTrackingTransformer orderTrackingTransformer;
+	@Autowired
+	private OrderTrackingService orderTrackingService;
+	@Autowired
+	private OrderTrackingTransformer orderTrackingTransformer;
 
-    public TrackOrder loadOrder(@PathVariable final String orderNumber)
-	    throws JsonParseException, JsonMappingException, IOException {
+	public TrackOrder loadOrder(@PathVariable final String orderNumber)
+			throws JsonParseException, JsonMappingException, IOException {
 
-	final Order order = orderTrackingService.loadOrder(orderNumber);
+		final Order order = orderTrackingService.loadOrder(orderNumber);
 
-	return orderTrackingTransformer.transformToTrackOrder(order);
+		return orderTrackingTransformer.transformToTrackOrder(order);
 
-    }
+	}
 
-    public TrackOrder fulfilOrder(final String orderId, final String lineNo, final String status, final String quantity,
-	    final String refernceNumber, String itemCategory) throws IOException {
+	public TrackOrder fulfilOrder(final String orderId, final String lineNo, final String status, final String quantity,
+			final String refernceNumber, final String itemCategory) throws IOException {
 
-	return orderTrackingTransformer.transformToTrackOrder(
-		orderTrackingService.fulfilOrder(orderId, lineNo, status, quantity, refernceNumber, itemCategory));
-    }
+		return orderTrackingTransformer.transformToTrackOrder(
+				orderTrackingService.fulfilOrder(orderId, lineNo, status, quantity, refernceNumber, itemCategory));
+	}
 
 }
