@@ -1,6 +1,7 @@
 package com.order.track.adapter;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,25 +17,43 @@ import com.order.track.transformer.OrderTrackingTransformer;
 @Service
 public class OrderTrackingAdapter {
 
-	@Autowired
-	private OrderTrackingService orderTrackingService;
-	@Autowired
-	private OrderTrackingTransformer orderTrackingTransformer;
+    @Autowired
+    private OrderTrackingService orderTrackingService;
+    @Autowired
+    private OrderTrackingTransformer orderTrackingTransformer;
 
-	public TrackOrder loadOrder(@PathVariable final String orderNumber)
-			throws JsonParseException, JsonMappingException, IOException {
+    public TrackOrder loadOrder(@PathVariable final String orderNumber, String customerId)
+	    throws JsonParseException, JsonMappingException, IOException {
 
-		final Order order = orderTrackingService.loadOrder(orderNumber);
+	final Order order = orderTrackingService.loadOrder(orderNumber, customerId);
 
-		return orderTrackingTransformer.transformToTrackOrder(order);
+	final String userType = orderTrackingService.fetchUserType(order, customerId);
+
+	TrackOrder result = null;
+
+	if ("External User".equals(userType)) {
+
+	    result = orderTrackingTransformer.transformToTrackOrderExternal(order);
+
+	} else if ("Internal User".equals(userType)) {
+
+	    result = orderTrackingTransformer.transformToTrackOrderInternal(order);
+	} else {
+
+	    result = orderTrackingTransformer.buildOrderNotFoundResponse();
 
 	}
 
-	public TrackOrder fulfilOrder(final String orderId, final String lineNo, final String status, final String quantity,
-			final String refernceNumber, final String itemCategory) throws IOException {
+	return result;
 
-		return orderTrackingTransformer.transformToTrackOrder(
-				orderTrackingService.fulfilOrder(orderId, lineNo, status, quantity, refernceNumber, itemCategory));
-	}
+    }
+
+    public TrackOrder fulfilOrder(final String orderId, final String lineNo, final String status, final String quantity,
+	    final String refernceNumber, String itemCategory, String customerId, LocalDateTime date)
+	    throws IOException {
+
+	return orderTrackingTransformer.transformToTrackOrderInternal(orderTrackingService.fulfilOrder(orderId, lineNo,
+		status, quantity, refernceNumber, itemCategory, customerId, date));
+    }
 
 }

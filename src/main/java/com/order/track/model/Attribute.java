@@ -11,12 +11,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Attributes {
+public class Attribute {
 	@NonNull
 	private String lineNo;
 	@NonNull
 	private String currentStatus;
 	private String trackingUrl;
 	@NonNull
-	private List<LifeCycle> lifeCycles; 
+	private List<LifeCycle> lifeCycles;
+	@NonNull
+	private String itemCategory;
 }

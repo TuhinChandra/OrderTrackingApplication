@@ -1,5 +1,7 @@
 package com.order.track.model;
 
+import java.time.LocalDateTime;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Getter;
@@ -21,4 +23,5 @@ public class LifeCycle {
 	private String refernceNumber;
 	@NonNull
 	private boolean completed;
+	private LocalDateTime date;
 }

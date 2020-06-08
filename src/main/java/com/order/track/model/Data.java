@@ -13,5 +13,6 @@ import lombok.Setter;
 public class Data {
     private String type = "order";
     private Long id;
-    private List<Attributes> attributes;
+    private String customerId;
+    private List<Attribute> attributes;
 }

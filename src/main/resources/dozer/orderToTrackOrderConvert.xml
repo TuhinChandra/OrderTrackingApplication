@@ -11,15 +11,19 @@
 			<b>data.id</b>
 		</field>
 		<field>
+			<a>customerId</a>
+			<b>data.customerId</b>
+		</field>
+		<field>
 			<a>lineItems</a>
 			<b>data.attributes</b>
 			<a-hint>com.order.track.entity.Line</a-hint>
-			<b-hint>com.order.track.model.Attributes</b-hint>
+			<b-hint>com.order.track.model.Attribute</b-hint>
 		</field>
 	</mapping>
 	<mapping>
 		<class-a>com.order.track.entity.Line</class-a>
-		<class-b>com.order.track.model.Attributes</class-b>
+		<class-b>com.order.track.model.Attribute</class-b>
 		<field>
 			<a>fulfillmentEvents</a>
 			<b>lifeCycles</b>
