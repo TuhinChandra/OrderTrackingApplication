@@ -2,10 +2,10 @@ package com.order.track.transformer;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,22 +91,23 @@ public class OrderTrackingTransformer {
 
 				attribute.setCurrentStatus(globalConfiguration.getStatusConfig().get(attribute.getCurrentStatus()));
 
+				final Map<String, LifeCycle> lifeCycleMap = new HashMap<>();
 				for (final LifeCycle lifeCycle : attribute.getLifeCycles()) {
 					lifeCycle.setStatus(globalConfiguration.getStatusConfig().get(lifeCycle.getStatus()));
+					if (lifeCycleMap.containsKey(lifeCycle.getStatus())) {
+						if (lifeCycleMap.get(lifeCycle.getStatus()).getDate().isBefore(lifeCycle.getDate())) {
+							lifeCycleMap.put(lifeCycle.getStatus(), lifeCycle);
+						}
+					} else {
+						lifeCycleMap.put(lifeCycle.getStatus(), lifeCycle);
+					}
 				}
 
-				final Set<LifeCycle> set = new TreeSet<>(new Comparator<LifeCycle>() {
-					@Override
-					public int compare(final LifeCycle o1, final LifeCycle o2) {
-						if (o1.getStatus().equalsIgnoreCase(o2.getStatus())) {
-							return 0;
-						}
-						return 1;
-					}
-
+				final List<LifeCycle> lifeCycles = new ArrayList<>(lifeCycleMap.values());
+				Collections.sort(lifeCycles, (d1, d2) -> {
+					return d1.getOrdering() - d2.getOrdering();
 				});
-				set.addAll(attribute.getLifeCycles());
-				attribute.setLifeCycles(new ArrayList<>(set));
+				attribute.setLifeCycles(lifeCycles);
 
 			}
 		} else {

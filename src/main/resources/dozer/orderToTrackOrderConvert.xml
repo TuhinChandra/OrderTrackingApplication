@@ -11,10 +11,6 @@
 			<b>data.id</b>
 		</field>
 		<field>
-			<a>customerId</a>
-			<b>data.customerId</b>
-		</field>
-		<field>
 			<a>lineItems</a>
 			<b>data.attributes</b>
 			<a-hint>com.order.track.entity.Line</a-hint>

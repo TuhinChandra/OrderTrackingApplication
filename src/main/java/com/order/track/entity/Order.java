@@ -25,7 +25,6 @@ import lombok.Setter;
 public class Order {
 	@Id
 	private Long orderId;
-	private String customerId; 
 	private String currentStatus;
 
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
