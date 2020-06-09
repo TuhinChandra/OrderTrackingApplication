@@ -8,6 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -35,7 +36,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 	final String requestTokenHeader = request.getHeader("Authorization");
 	final String customerId = request.getHeader("customer-id");
 
-	if (null == customerId) {
+	if (StringUtils.isEmpty(customerId)) {
 
 	    String username = null;
 	    String jwtToken = null;

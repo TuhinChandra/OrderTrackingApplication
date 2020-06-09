@@ -27,21 +27,28 @@ public class OrderTrackingAdapter {
 
 	final Order order = orderTrackingService.loadOrder(orderNumber, customerId);
 
-	final String userType = orderTrackingService.fetchUserType(order, customerId, authorization);
-
 	TrackOrder result = null;
 
-	if ("External User".equals(userType)) {
+	if (order != null) {
 
-	    result = orderTrackingTransformer.transformToTrackOrderExternal(order);
+	    final String userType = orderTrackingService.fetchUserType(order, customerId, authorization);
 
-	} else if ("Internal User".equals(userType)) {
+	    if ("External User".equals(userType)) {
 
-	    result = orderTrackingTransformer.transformToTrackOrderInternal(order);
+		result = orderTrackingTransformer.transformToTrackOrderExternal(order);
+
+	    } else if ("Internal User".equals(userType)) {
+
+		result = orderTrackingTransformer.transformToTrackOrderInternal(order);
+	    } else {
+
+		result = orderTrackingTransformer.buildOrderNotFoundResponse();
+
+	    }
+
 	} else {
 
 	    result = orderTrackingTransformer.buildOrderNotFoundResponse();
-
 	}
 
 	return result;
