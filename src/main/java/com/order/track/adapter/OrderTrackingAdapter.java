@@ -22,12 +22,12 @@ public class OrderTrackingAdapter {
     @Autowired
     private OrderTrackingTransformer orderTrackingTransformer;
 
-    public TrackOrder loadOrder(@PathVariable final String orderNumber, String customerId)
+    public TrackOrder loadOrder(@PathVariable final String orderNumber, String customerId, String authorization)
 	    throws JsonParseException, JsonMappingException, IOException {
 
 	final Order order = orderTrackingService.loadOrder(orderNumber, customerId);
 
-	final String userType = orderTrackingService.fetchUserType(order, customerId);
+	final String userType = orderTrackingService.fetchUserType(order, customerId, authorization);
 
 	TrackOrder result = null;
 

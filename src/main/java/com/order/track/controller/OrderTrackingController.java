@@ -26,9 +26,10 @@ public class OrderTrackingController {
 
     @RequestMapping(value = "/trackOrder/{orderNumber}", method = RequestMethod.GET, produces = "application/json")
     public TrackOrder trackOrder(@PathVariable final String orderNumber,
-	    @RequestHeader(value = "customer-id", required = false) String customerId)
+	    @RequestHeader(value = "customer-id", required = false) String customerId,
+	    @RequestHeader(value = "Authorization", required = false) String authorization)
 	    throws JsonParseException, JsonMappingException, IOException {
-	return orderTrackingAdapter.loadOrder(orderNumber, customerId);
+	return orderTrackingAdapter.loadOrder(orderNumber, customerId, authorization);
     }
 
     @PreAuthorize("hasAuthority('Fufiller')")

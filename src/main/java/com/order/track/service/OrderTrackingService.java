@@ -3,10 +3,13 @@ package com.order.track.service;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import com.order.track.configuration.GlobalConfiguration;
@@ -14,6 +17,7 @@ import com.order.track.entity.FulfillmentEvent;
 import com.order.track.entity.Line;
 import com.order.track.entity.Order;
 import com.order.track.repository.OrderRepository;
+import com.order.track.util.JwtTokenUtil;
 
 @Service
 public class OrderTrackingService {
@@ -22,13 +26,17 @@ public class OrderTrackingService {
     private OrderRepository orderRepository;
     @Autowired
     private GlobalConfiguration globalConfiguration;
+    @Autowired
+    private JwtUserDetailsService jwtUserDetailsService;
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
     public Order loadOrder(final String orderNumber, String customerId) {
 	return loadOrder(Long.parseLong(orderNumber));
 
     }
 
-    public String fetchUserType(Order order, String customerId) {
+    public String fetchUserType(Order order, String customerId, String authorization) {
 
 	String userType = null;
 
@@ -36,7 +44,8 @@ public class OrderTrackingService {
 
 	    userType = "External User";
 
-	} else if (isAuthenticatedUser()) {
+	} else if (StringUtils.isNotEmpty(authorization) && authorization.startsWith("Bearer")
+		&& isAuthenticatedInternalUser(authorization)) {
 
 	    userType = "Internal User";
 
@@ -45,9 +54,25 @@ public class OrderTrackingService {
 	return userType;
     }
 
-    @PreAuthorize("hasAuthority('Internal User')")
-    private boolean isAuthenticatedUser() {
-	return true;
+    private boolean isAuthenticatedInternalUser(String authorization) {
+
+	final UserDetails userDetails = jwtUserDetailsService
+		.loadUserByUsername(jwtTokenUtil.getUsernameFromToken(authorization.substring(7)));
+
+	if (jwtTokenUtil.validateToken(authorization.substring(7), userDetails)) {
+
+	    final Iterator iterator = userDetails.getAuthorities().iterator();
+
+	    while (iterator.hasNext()) {
+
+		return ((GrantedAuthority) iterator.next()).getAuthority().equals("Internal User");
+
+	    }
+
+	}
+
+	return false;
+
     }
 
     private Order loadOrder(final Long orderNumber) {
