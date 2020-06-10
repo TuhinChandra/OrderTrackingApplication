@@ -26,14 +26,18 @@ public class OrderTrackingAdapter {
 
 		final Order order = orderTrackingService.loadOrder(Long.parseLong(orderNumber));
 		TrackOrder result = null;
-		if ("External".equalsIgnoreCase(invokationType)) {
-			result = orderTrackingTransformer.transformToTrackOrderExternal(order);
+		if (order != null) {
+			if ("External".equalsIgnoreCase(invokationType)) {
+				result = orderTrackingTransformer.transformToTrackOrderExternal(order);
+			} else {
+				result = orderTrackingTransformer.transformToTrackOrderInternal(order);
+			}
+
 		} else {
-			result = orderTrackingTransformer.transformToTrackOrderInternal(order);
+			result = orderTrackingTransformer.buildOrderNotFoundResponse();
 		}
 
 		return result;
-
 	}
 
 	public TrackOrder fulfilOrder(final String orderId, final String lineNo, final String status, final String quantity,
