@@ -1,6 +1,8 @@
+
 package com.order.track.entity;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -21,28 +23,40 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "LINE")
-public class Line {
+@Table(name = "DELIVERY_GROUP")
+public class DeliveryGroup {
 	@GeneratedValue
 	@Id
 	@JsonIgnore
 	private Long sequenceNumber;
-	private Long lineNo;
+	private String fulfilmentSourceType;
+	private String deliveryGroupCode;
 	private String currentStatus;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonIgnore
-	private DeliveryGroup deliveryGroup;
+	private Order order;
+
+	@OneToMany(mappedBy = "line", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<Line> lines;
 
 	@OneToMany(mappedBy = "line", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<FulfillmentEvent> fulfillmentEvents;
 
-	public Line(final Long lineNo, final String currentStatus, final DeliveryGroup deliveryGroup,
-			final List<FulfillmentEvent> fulfillmentEvents) {
+	public DeliveryGroup(final String fulfilmentSourceType, final String deliveryGroupCode, final String currentStatus,
+			final Order order, final Set<Line> lines) {
 		super();
-		this.lineNo = lineNo;
+		this.fulfilmentSourceType = fulfilmentSourceType;
+		this.deliveryGroupCode = deliveryGroupCode;
 		this.currentStatus = currentStatus;
-		this.deliveryGroup = deliveryGroup;
-		this.fulfillmentEvents = fulfillmentEvents;
+		this.order = order;
+		this.lines = lines;
+	}
+
+	public DeliveryGroup(final String fulfilmentSourceType, final String deliveryGroupCode, final Order order) {
+		super();
+		this.fulfilmentSourceType = fulfilmentSourceType;
+		this.deliveryGroupCode = deliveryGroupCode;
+		this.order = order;
 	}
 
 }

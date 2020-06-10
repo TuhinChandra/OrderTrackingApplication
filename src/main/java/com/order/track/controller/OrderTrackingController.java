@@ -41,16 +41,17 @@ public class OrderTrackingController {
 	}
 
 	@RequestMapping(value = "/fulfilOrder", method = RequestMethod.POST, produces = "application/json")
-	public TrackOrder fulfilOrder(@RequestParam(value = "order", required = false) final String orderNumber,
-			@RequestParam(value = "line", required = false) final String lineNumber,
-			@RequestParam(value = "status", required = false) final String status,
-			@RequestParam(value = "quantity", required = false) final String quantity,
+	public TrackOrder fulfilOrder(@RequestParam(value = "order", required = true) final String orderNumber,
+			@RequestParam(value = "fulfilmentSourceType", required = false) final String fulfilmentSourceType,
+			@RequestParam(value = "deliveryGroupCode", required = false) final String deliveryGroupCode,
+			@RequestParam(value = "line", required = true) final String lineNumber,
+			@RequestParam(value = "status", required = true) final String status,
+			@RequestParam(value = "quantity", required = true) final String quantity,
 			@RequestParam(value = "refernceNumber", required = false) final String refernceNumber,
-			@RequestParam(value = "itemCategory", required = false) final String itemCategory,
 			@RequestParam("datetime") @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss") final LocalDateTime date)
 			throws IOException {
-		return orderTrackingAdapter.fulfilOrder(orderNumber, lineNumber, status, quantity, refernceNumber, itemCategory,
-				date);
+		return orderTrackingAdapter.fulfilOrder(orderNumber, lineNumber, status, quantity, refernceNumber,
+				fulfilmentSourceType, deliveryGroupCode, date);
 
 	}
 }

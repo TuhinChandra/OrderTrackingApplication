@@ -28,6 +28,6 @@ public class Order {
 	private String currentStatus;
 
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private Set<Line> lineItems;
+	private Set<DeliveryGroup> deliveryGroups;
 
 }
