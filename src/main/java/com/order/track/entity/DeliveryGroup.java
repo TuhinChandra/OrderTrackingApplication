@@ -1,7 +1,6 @@
 
 package com.order.track.entity;
 
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -36,11 +35,11 @@ public class DeliveryGroup {
 	@JsonIgnore
 	private Order order;
 
-	@OneToMany(mappedBy = "line", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "deliveryGroup", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<Line> lines;
 
-	@OneToMany(mappedBy = "line", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private List<FulfillmentEvent> fulfillmentEvents;
+	@OneToMany(mappedBy = "deliveryGroup", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<GroupFulfillmentEvent> fulfillmentEvents;
 
 	public DeliveryGroup(final String fulfilmentSourceType, final String deliveryGroupCode, final String currentStatus,
 			final Order order, final Set<Line> lines) {

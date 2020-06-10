@@ -16,12 +16,9 @@ import lombok.ToString;
 public class LifeCycle {
 	@NonNull
 	private String status;
-	private int quantity;
-	@NonNull
 	private int ordering;
 	private String refernceType;
 	private String refernceNumber;
-	@NonNull
 	private boolean completed;
 	private LocalDateTime date;
 }

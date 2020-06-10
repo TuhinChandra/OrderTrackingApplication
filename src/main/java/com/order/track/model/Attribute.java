@@ -13,12 +13,12 @@ import lombok.Setter;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Attribute {
 	@NonNull
-	private String lineNo;
+	private String fulfilmentSourceType;
+	@NonNull
+	private String deliveryGroupCode;
 	@NonNull
 	private String currentStatus;
 	private String trackingUrl;
 	@NonNull
 	private List<LifeCycle> lifeCycles;
-	@NonNull
-	private String itemCategory;
 }

@@ -1,14 +1,12 @@
 package com.order.track.entity;
 
-import java.util.Set;
+import java.time.LocalDateTime;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -21,28 +19,29 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "LINE")
-public class Line {
+@Table(name = "GroupFulfillmentEvent")
+public class GroupFulfillmentEvent {
 	@GeneratedValue
 	@Id
 	@JsonIgnore
 	private Long sequenceNumber;
-	private Long lineNo;
-	private String currentStatus;
+	private String status;
+	private String refernceType;
+	private String refernceNumber;
+	private boolean completed = true;
+	private int ordering;
+	private LocalDateTime date;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonIgnore
 	private DeliveryGroup deliveryGroup;
 
-	@OneToMany(mappedBy = "line", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private Set<LineFulfillmentEvent> fulfillmentEvents;
-
-	public Line(final Long lineNo, final String currentStatus, final DeliveryGroup deliveryGroup,
-			final Set<LineFulfillmentEvent> fulfillmentEvents) {
-		super();
-		this.lineNo = lineNo;
-		this.currentStatus = currentStatus;
+	public GroupFulfillmentEvent(final String status, final boolean completed, final int ordering,
+			final LocalDateTime date, final DeliveryGroup deliveryGroup) {
+		this.status = status;
+		this.completed = completed;
+		this.ordering = ordering;
+		this.date = date;
 		this.deliveryGroup = deliveryGroup;
-		this.fulfillmentEvents = fulfillmentEvents;
 	}
 
 }

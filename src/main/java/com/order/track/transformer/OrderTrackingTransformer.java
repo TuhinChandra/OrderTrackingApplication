@@ -49,14 +49,14 @@ public class OrderTrackingTransformer {
 
 			for (final Attribute attribute : attributes) {
 
-				final String itemCategory = attribute.getItemCategory();
+				final String fulfilmentSourceType = attribute.getFulfilmentSourceType();
 
 				final List<String> eligibleStatuses = new ArrayList<>(
-						globalConfiguration.fetchStatusMetrix().get(itemCategory).keySet());
+						globalConfiguration.fetchStatusMetrix().get(fulfilmentSourceType).keySet());
 
 				removeCompleteStatus(attribute, eligibleStatuses);
 
-				buildIncompleteStatues(attribute, itemCategory, eligibleStatuses);
+				buildIncompleteStatues(attribute, fulfilmentSourceType, eligibleStatuses);
 
 			}
 		} else {
@@ -80,14 +80,14 @@ public class OrderTrackingTransformer {
 
 			for (final Attribute attribute : attributes) {
 
-				final String itemCategory = attribute.getItemCategory();
+				final String fulfilmentSourceType = attribute.getFulfilmentSourceType();
 
 				final List<String> eligibleStatuses = new ArrayList<>(
-						globalConfiguration.fetchStatusMetrix().get(itemCategory).keySet());
+						globalConfiguration.fetchStatusMetrix().get(fulfilmentSourceType).keySet());
 
 				removeCompleteStatus(attribute, eligibleStatuses);
 
-				buildIncompleteStatues(attribute, itemCategory, eligibleStatuses);
+				buildIncompleteStatues(attribute, fulfilmentSourceType, eligibleStatuses);
 
 				attribute.setCurrentStatus(globalConfiguration.getStatusConfig().get(attribute.getCurrentStatus()));
 
@@ -123,8 +123,10 @@ public class OrderTrackingTransformer {
 	}
 
 	private void removeCompleteStatus(final Attribute attribute, final List<String> eligibleStatuses) {
-		for (final LifeCycle lifeCycle : attribute.getLifeCycles()) {
-			eligibleStatuses.remove(lifeCycle.getStatus());
+		if (null != attribute.getLifeCycles()) {
+			for (final LifeCycle lifeCycle : attribute.getLifeCycles()) {
+				eligibleStatuses.remove(lifeCycle.getStatus());
+			}
 		}
 	}
 
@@ -136,7 +138,12 @@ public class OrderTrackingTransformer {
 			final LifeCycle lifeCycle = new LifeCycle();
 			lifeCycle.setStatus(status);
 			lifeCycle.setOrdering(fetchOrdering(itemCategory, status));
-			attribute.getLifeCycles().add(lifeCycle);
+			List<LifeCycle> lifeCycles = attribute.getLifeCycles();
+			if (null == lifeCycles) {
+				lifeCycles = new ArrayList<>();
+			}
+
+			lifeCycles.add(lifeCycle);
 
 		}
 	}

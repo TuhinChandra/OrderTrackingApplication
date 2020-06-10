@@ -11,14 +11,14 @@
 			<b>data.id</b>
 		</field>
 		<field>
-			<a>lineItems</a>
+			<a>deliveryGroups</a>
 			<b>data.attributes</b>
-			<a-hint>com.order.track.entity.Line</a-hint>
+			<a-hint>com.order.track.entity.DeliveryGroup</a-hint>
 			<b-hint>com.order.track.model.Attribute</b-hint>
 		</field>
 	</mapping>
 	<mapping>
-		<class-a>com.order.track.entity.Line</class-a>
+		<class-a>com.order.track.entity.DeliveryGroup</class-a>
 		<class-b>com.order.track.model.Attribute</class-b>
 		<field>
 			<a>fulfillmentEvents</a>
