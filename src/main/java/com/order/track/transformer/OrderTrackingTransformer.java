@@ -24,133 +24,193 @@ import com.order.track.model.Warning;
 @Service
 public class OrderTrackingTransformer {
 
-	@Autowired
-	private Mapper mapper;
-	@Autowired
-	private GlobalConfiguration globalConfiguration;
+    @Autowired
+    private Mapper mapper;
+    @Autowired
+    private GlobalConfiguration globalConfiguration;
 
-	/*
-	 * public TrackOrder transformToTrackOrder(Order order) {
-	 *
-	 * return OrderTrackingMapper.INSTANCE.mapOrderToTrackOrder(order);
-	 *
-	 * }
-	 */
+    /*
+     * public TrackOrder transformToTrackOrder(Order order) {
+     *
+     * return OrderTrackingMapper.INSTANCE.mapOrderToTrackOrder(order);
+     *
+     * }
+     */
 
-	public TrackOrder transformToTrackOrderInternal(final Order order) throws IOException {
+    public TrackOrder transformToTrackOrder(final Order order, String type) throws IOException {
 
-		final TrackOrder trackOrder;
-		if (null != order) {
-			trackOrder = new TrackOrder();
-			mapper.map(order, trackOrder);
-			globalConfiguration.getStatusMatrix();
+	final TrackOrder trackOrder;
 
-			final List<Attribute> attributes = trackOrder.getData().getAttributes();
+	if (null != order) {
+	    trackOrder = new TrackOrder();
+	    mapper.map(order, trackOrder);
 
-			for (final Attribute attribute : attributes) {
+	    final List<Attribute> attributes = trackOrder.getData().getAttributes().stream()
+		    .filter(e -> e.getCurrentStatus() != null).collect(Collectors.toList());
 
-				final String fulfilmentSourceType = attribute.getFulfilmentSourceType();
+	    for (final Attribute attribute : attributes) {
 
-				final List<String> eligibleStatuses = new ArrayList<>(
-						globalConfiguration.fetchStatusMetrix().get(fulfilmentSourceType).keySet());
+		final String fulfilmentSourceType = attribute.getFulfilmentSourceType();
 
-				removeCompleteStatus(attribute, eligibleStatuses);
+		final List<String> eligibleStatuses = new ArrayList<>(
+			globalConfiguration.fetchStatusMetrix().get(fulfilmentSourceType).keySet());
 
-				buildIncompleteStatues(attribute, fulfilmentSourceType, eligibleStatuses);
+		removeCompleteStatus(attribute, eligibleStatuses);
 
+		buildIncompleteStatues(attribute, fulfilmentSourceType, eligibleStatuses);
+
+		attribute.setCurrentStatus(globalConfiguration.getStatusConfig(type).get(attribute.getCurrentStatus()));
+
+		final Map<String, LifeCycle> lifeCycleMap = new HashMap<>();
+		for (final LifeCycle lifeCycle : attribute.getLifeCycles()) {
+		    lifeCycle.setStatus(globalConfiguration.getStatusConfig(type).get(lifeCycle.getStatus()));
+		    if (lifeCycleMap.containsKey(lifeCycle.getStatus())) {
+			if (lifeCycle.getDate() != null && lifeCycleMap.get(lifeCycle.getStatus()).getDate() != null
+				& lifeCycleMap.get(lifeCycle.getStatus()).getDate().isBefore(lifeCycle.getDate())) {
+			    lifeCycleMap.put(lifeCycle.getStatus(), lifeCycle);
 			}
-		} else {
-			trackOrder = buildOrderNotFoundResponse();
-		}
-		return trackOrder;
+		    } else {
+			lifeCycleMap.put(lifeCycle.getStatus(), lifeCycle);
+		    }
 
-	}
+		    if (lifeCycle.isCompleted() && (lifeCycle.getStatus().equals("On the way")
+			    || lifeCycle.getStatus().equals("Items Dispatched"))) {
 
-	public TrackOrder transformToTrackOrderExternal(final Order order) throws IOException {
-
-		final TrackOrder trackOrder;
-
-		if (null != order) {
-			trackOrder = new TrackOrder();
-			mapper.map(order, trackOrder);
-			globalConfiguration.getStatusMatrix();
-
-			final List<Attribute> attributes = trackOrder.getData().getAttributes().stream()
-					.filter(e -> e.getCurrentStatus() != null).collect(Collectors.toList());
-
-			for (final Attribute attribute : attributes) {
-
-				final String fulfilmentSourceType = attribute.getFulfilmentSourceType();
-
-				final List<String> eligibleStatuses = new ArrayList<>(
-						globalConfiguration.fetchStatusMetrix().get(fulfilmentSourceType).keySet());
-
-				removeCompleteStatus(attribute, eligibleStatuses);
-
-				buildIncompleteStatues(attribute, fulfilmentSourceType, eligibleStatuses);
-
-				attribute.setCurrentStatus(globalConfiguration.getStatusConfig().get(attribute.getCurrentStatus()));
-
-				final Map<String, LifeCycle> lifeCycleMap = new HashMap<>();
-				for (final LifeCycle lifeCycle : attribute.getLifeCycles()) {
-					lifeCycle.setStatus(globalConfiguration.getStatusConfig().get(lifeCycle.getStatus()));
-					if (lifeCycleMap.containsKey(lifeCycle.getStatus())) {
-						if (lifeCycleMap.get(lifeCycle.getStatus()).getDate().isBefore(lifeCycle.getDate())) {
-							lifeCycleMap.put(lifeCycle.getStatus(), lifeCycle);
-						}
-					} else {
-						lifeCycleMap.put(lifeCycle.getStatus(), lifeCycle);
-					}
-				}
-
-				final List<LifeCycle> lifeCycles = new ArrayList<>(lifeCycleMap.values());
-				Collections.sort(lifeCycles, (d1, d2) -> {
-					return d1.getOrdering() - d2.getOrdering();
-				});
-				attribute.setLifeCycles(lifeCycles);
-
-			}
-		} else {
-			trackOrder = buildOrderNotFoundResponse();
-		}
-		return trackOrder;
-
-	}
-
-	public TrackOrder buildOrderNotFoundResponse() {
-
-		return new TrackOrderWithWarning(new Meta(new Warning("404", "INVALID-ORDER")));
-	}
-
-	private void removeCompleteStatus(final Attribute attribute, final List<String> eligibleStatuses) {
-		if (null != attribute.getLifeCycles()) {
-			for (final LifeCycle lifeCycle : attribute.getLifeCycles()) {
-				eligibleStatuses.remove(lifeCycle.getStatus());
-			}
-		}
-	}
-
-	private void buildIncompleteStatues(final Attribute attribute, final String itemCategory,
-			final List<String> eligibleStatuses) {
-
-		for (final String status : eligibleStatuses) {
-
-			final LifeCycle lifeCycle = new LifeCycle();
-			lifeCycle.setStatus(status);
-			lifeCycle.setOrdering(fetchOrdering(itemCategory, status));
-			List<LifeCycle> lifeCycles = attribute.getLifeCycles();
-			if (null == lifeCycles) {
-				lifeCycles = new ArrayList<>();
-			}
-
-			lifeCycles.add(lifeCycle);
+			attribute.setTrackingUrl(
+				"https://www.parcelforce.com/track-trace?trackNumber=" + lifeCycle.getRefernceNumber());
+		    }
 
 		}
-	}
 
-	private int fetchOrdering(final String itemCategory, final String status) {
-		return Integer.parseInt(globalConfiguration.fetchStatusMetrix().get(itemCategory).get(status));
+		final List<LifeCycle> lifeCycles = new ArrayList<>(lifeCycleMap.values());
+		Collections.sort(lifeCycles, (d1, d2) -> {
+		    return d1.getOrdering() - d2.getOrdering();
+		});
+		attribute.setLifeCycles(lifeCycles);
+
+	    }
+	} else {
+	    trackOrder = buildOrderNotFoundResponse();
+	}
+	return trackOrder;
+
+    }
+
+    public TrackOrder transformToTrackOrderInternal(final Order order) throws IOException {
+
+	final TrackOrder trackOrder;
+	if (null != order) {
+	    trackOrder = new TrackOrder();
+	    mapper.map(order, trackOrder);
+	    globalConfiguration.getStatusMatrix();
+
+	    final List<Attribute> attributes = trackOrder.getData().getAttributes();
+
+	    for (final Attribute attribute : attributes) {
+
+		final String fulfilmentSourceType = attribute.getFulfilmentSourceType();
+
+		final List<String> eligibleStatuses = new ArrayList<>(
+			globalConfiguration.fetchStatusMetrix().get(fulfilmentSourceType).keySet());
+
+		removeCompleteStatus(attribute, eligibleStatuses);
+
+		buildIncompleteStatues(attribute, fulfilmentSourceType, eligibleStatuses);
+
+	    }
+	} else {
+	    trackOrder = buildOrderNotFoundResponse();
+	}
+	return trackOrder;
+
+    }
+
+    public TrackOrder transformToTrackOrderExternal(final Order order) throws IOException {
+
+	final TrackOrder trackOrder;
+
+	if (null != order) {
+	    trackOrder = new TrackOrder();
+	    mapper.map(order, trackOrder);
+
+	    final List<Attribute> attributes = trackOrder.getData().getAttributes().stream()
+		    .filter(e -> e.getCurrentStatus() != null).collect(Collectors.toList());
+
+	    for (final Attribute attribute : attributes) {
+
+		final String fulfilmentSourceType = attribute.getFulfilmentSourceType();
+
+		final List<String> eligibleStatuses = new ArrayList<>(
+			globalConfiguration.fetchStatusMetrix().get(fulfilmentSourceType).keySet());
+
+		removeCompleteStatus(attribute, eligibleStatuses);
+
+		buildIncompleteStatues(attribute, fulfilmentSourceType, eligibleStatuses);
+
+		attribute.setCurrentStatus(
+			globalConfiguration.getStatusConfig("external").get(attribute.getCurrentStatus()));
+
+		final Map<String, LifeCycle> lifeCycleMap = new HashMap<>();
+		for (final LifeCycle lifeCycle : attribute.getLifeCycles()) {
+		    lifeCycle.setStatus(globalConfiguration.getStatusConfig("external").get(lifeCycle.getStatus()));
+		    if (lifeCycleMap.containsKey(lifeCycle.getStatus())) {
+			if (lifeCycle.getDate() != null && lifeCycleMap.get(lifeCycle.getStatus()).getDate() != null
+				& lifeCycleMap.get(lifeCycle.getStatus()).getDate().isBefore(lifeCycle.getDate())) {
+			    lifeCycleMap.put(lifeCycle.getStatus(), lifeCycle);
+			}
+		    } else {
+			lifeCycleMap.put(lifeCycle.getStatus(), lifeCycle);
+		    }
+		}
+
+		final List<LifeCycle> lifeCycles = new ArrayList<>(lifeCycleMap.values());
+		Collections.sort(lifeCycles, (d1, d2) -> {
+		    return d1.getOrdering() - d2.getOrdering();
+		});
+		attribute.setLifeCycles(lifeCycles);
+
+	    }
+	} else {
+	    trackOrder = buildOrderNotFoundResponse();
+	}
+	return trackOrder;
+
+    }
+
+    public TrackOrder buildOrderNotFoundResponse() {
+
+	return new TrackOrderWithWarning(new Meta(new Warning("404", "INVALID-ORDER")));
+    }
+
+    private void removeCompleteStatus(final Attribute attribute, final List<String> eligibleStatuses) {
+	if (null != attribute.getLifeCycles()) {
+	    for (final LifeCycle lifeCycle : attribute.getLifeCycles()) {
+		eligibleStatuses.remove(lifeCycle.getStatus());
+	    }
+	}
+    }
+
+    private void buildIncompleteStatues(final Attribute attribute, final String itemCategory,
+	    final List<String> eligibleStatuses) {
+
+	for (final String status : eligibleStatuses) {
+
+	    final LifeCycle lifeCycle = new LifeCycle();
+	    lifeCycle.setStatus(status);
+	    lifeCycle.setOrdering(fetchOrdering(itemCategory, status));
+	    List<LifeCycle> lifeCycles = attribute.getLifeCycles();
+	    if (null == lifeCycles) {
+		lifeCycles = new ArrayList<>();
+	    }
+
+	    lifeCycles.add(lifeCycle);
 
 	}
+    }
+
+    private int fetchOrdering(final String itemCategory, final String status) {
+	return Integer.parseInt(globalConfiguration.fetchStatusMetrix().get(itemCategory).get(status));
+
+    }
 
 }

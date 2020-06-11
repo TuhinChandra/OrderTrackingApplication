@@ -16,36 +16,38 @@ import com.order.track.transformer.OrderTrackingTransformer;
 @Service
 public class OrderTrackingAdapter {
 
-	@Autowired
-	private OrderTrackingService orderTrackingService;
-	@Autowired
-	private OrderTrackingTransformer orderTrackingTransformer;
+    @Autowired
+    private OrderTrackingService orderTrackingService;
+    @Autowired
+    private OrderTrackingTransformer orderTrackingTransformer;
 
-	public TrackOrder loadOrder(final String orderNumber, final String invokationType)
-			throws JsonParseException, JsonMappingException, IOException {
+    public TrackOrder loadOrder(final String orderNumber, final String invokationType)
+	    throws JsonParseException, JsonMappingException, IOException {
 
-		final Order order = orderTrackingService.loadOrder(Long.parseLong(orderNumber));
-		TrackOrder result = null;
-		if (order != null) {
-			if ("External".equalsIgnoreCase(invokationType)) {
-				result = orderTrackingTransformer.transformToTrackOrderExternal(order);
-			} else {
-				result = orderTrackingTransformer.transformToTrackOrderInternal(order);
-			}
+	final Order order = orderTrackingService.loadOrder(Long.parseLong(orderNumber));
+	TrackOrder result = null;
+	if (order != null) {
+	    /*
+	     * if ("external".equalsIgnoreCase(invokationType)) { result =
+	     * orderTrackingTransformer.transformToTrackOrderExternal(order); } else {
+	     * result = orderTrackingTransformer.transformToTrackOrderInternal(order); }
+	     */
 
-		} else {
-			result = orderTrackingTransformer.buildOrderNotFoundResponse();
-		}
+	    result = orderTrackingTransformer.transformToTrackOrder(order, invokationType);
 
-		return result;
+	} else {
+	    result = orderTrackingTransformer.buildOrderNotFoundResponse();
 	}
 
-	public TrackOrder fulfilOrder(final String orderId, final String lineNo, final String status, final String quantity,
-			final String refernceNumber, final String fulfilmentSourceType, final String deliveryGroupCode,
-			final LocalDateTime date) throws IOException {
+	return result;
+    }
 
-		return orderTrackingTransformer.transformToTrackOrderInternal(orderTrackingService.fulfilOrder(orderId, lineNo,
-				status, quantity, refernceNumber, fulfilmentSourceType, deliveryGroupCode, date));
-	}
+    public TrackOrder fulfilOrder(final String orderId, final String lineNo, final String status, final String quantity,
+	    final String refernceNumber, final String refernceType, final String fulfilmentSourceType,
+	    final String deliveryGroupCode, final LocalDateTime date) throws IOException {
+
+	return orderTrackingTransformer.transformToTrackOrderInternal(orderTrackingService.fulfilOrder(orderId, lineNo,
+		status, quantity, refernceNumber, refernceType, fulfilmentSourceType, deliveryGroupCode, date));
+    }
 
 }

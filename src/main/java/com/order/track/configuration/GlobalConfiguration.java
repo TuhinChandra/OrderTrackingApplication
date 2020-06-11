@@ -18,12 +18,15 @@ public class GlobalConfiguration {
 
     @Value("#{${statusMatrix}}")
     private Map<String, String> statusMatrix;
-    
+
     @Value("#{${users}}")
     private Map<String, String> users;
-    
-    @Value("#{${statusConfig}}")
-    private Map<String, String> statusConfig;
+
+    @Value("#{${statusConfigExternal}}")
+    private Map<String, String> statusConfigExternal;
+
+    @Value("#{${statusConfigInternal}}")
+    private Map<String, String> statusConfigInternal;
 
     public Map<String, Map<String, String>> fetchStatusMetrix() {
 
@@ -37,18 +40,24 @@ public class GlobalConfiguration {
 
 	return result;
     }
-    
-    public Map<String,String> fetchUserDetails(String username) {
-	
+
+    public Map<String, String> getStatusConfig(String type) {
+
+	return "external".equals(type) ? statusConfigExternal : statusConfigInternal;
+
+    }
+
+    public Map<String, String> fetchUserDetails(String username) {
+
 	final Map<String, String> result = new HashMap<>();
 
 	String user = users.get(username);
-	
+
 	String[] userInfo = user.split(",");
-	
-	result.put("Password",userInfo[0]);
-	result.put("Role",userInfo[1]);
-	
+
+	result.put("Password", userInfo[0]);
+	result.put("Role", userInfo[1]);
+
 	return result;
     }
 

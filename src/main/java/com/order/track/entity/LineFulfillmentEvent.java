@@ -37,13 +37,15 @@ public class LineFulfillmentEvent {
 	private Line line;
 
 	public LineFulfillmentEvent(final String status, final boolean completed, final int ordering,
-			final LocalDateTime date, final int quantity, final Line line) {
+			final LocalDateTime date, final int quantity, final Line line,final String refernceNumber, final String refernceType) {
 		this.status = status;
 		this.completed = completed;
 		this.ordering = ordering;
 		this.date = date;
 		this.quantity = quantity;
 		this.line = line;
+		this.refernceNumber = refernceNumber;
+		this.refernceType = refernceType;
 	}
 
 }

@@ -12,13 +12,18 @@ import lombok.Setter;
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Attribute {
-	@NonNull
-	private String fulfilmentSourceType;
-	@NonNull
-	private String deliveryGroupCode;
-	@NonNull
-	private String currentStatus;
-	private String trackingUrl;
-	@NonNull
-	private List<LifeCycle> lifeCycles;
+    @NonNull
+    private String fulfilmentSourceType;
+    @NonNull
+    private String deliveryGroupCode;
+    @NonNull
+    private String currentStatus;
+    private String trackingUrl;
+    @NonNull
+    private List<LifeCycle> lifeCycles;
+
+    public String TrackingUrl() {
+	return "DISPATCHED".equals(currentStatus) ? "https://www.parcelforce.com/track-trace?trackNumber=SF3778426001"
+		: trackingUrl;
+    }
 }
