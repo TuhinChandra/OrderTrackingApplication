@@ -10,11 +10,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Data {
-    private String type = "order";
+public class GetOrder {
+
+    private  String type;
     private Long id;
-    private String customerId;
-    private String dateTimeCreated;
-    private String orderStatus="Processing";
-    private List<Attribute> attributes;
+    private GetOrderAttributes attributes;
+
 }

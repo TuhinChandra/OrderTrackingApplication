@@ -32,17 +32,21 @@ public class Line {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonIgnore
 	private DeliveryGroup deliveryGroup;
+	private String productName;
+	private String ean;
 
 	@OneToMany(mappedBy = "line", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<LineFulfillmentEvent> fulfillmentEvents;
 
 	public Line(final Long lineNo, final String currentStatus, final DeliveryGroup deliveryGroup,
-			final Set<LineFulfillmentEvent> fulfillmentEvents) {
+			final Set<LineFulfillmentEvent> fulfillmentEvents,String productName,String ean) {
 		super();
 		this.lineNo = lineNo;
 		this.currentStatus = currentStatus;
 		this.deliveryGroup = deliveryGroup;
 		this.fulfillmentEvents = fulfillmentEvents;
+		this.productName=productName;
+		this.ean=ean;
 	}
 
 }

@@ -44,10 +44,12 @@ public class OrderTrackingAdapter {
 
     public TrackOrder fulfilOrder(final String orderId, final String lineNo, final String status, final String quantity,
 	    final String refernceNumber, final String refernceType, final String fulfilmentSourceType,
-	    final String deliveryGroupCode, final LocalDateTime date) throws IOException {
+	    final String deliveryGroupCode, final LocalDateTime date, String productName, String ean,
+	    LocalDateTime deliveryDate) throws IOException {
 
-	return orderTrackingTransformer.transformToTrackOrderInternal(orderTrackingService.fulfilOrder(orderId, lineNo,
-		status, quantity, refernceNumber, refernceType, fulfilmentSourceType, deliveryGroupCode, date));
+	return orderTrackingTransformer.transformToTrackOrderInternal(
+		orderTrackingService.fulfilOrder(orderId, lineNo, status, quantity, refernceNumber, refernceType,
+			fulfilmentSourceType, deliveryGroupCode, date, productName, ean, deliveryDate));
     }
 
 }

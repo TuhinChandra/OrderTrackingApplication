@@ -31,7 +31,8 @@ public class OrderTrackingService {
 
     public Order fulfilOrder(final String orderId, final String lineNo, final String status, final String lineQuantity,
 	    final String refernceNumber, final String refernceType, final String fulfilmentSourceType,
-	    final String deliveryGroupCode, final LocalDateTime date) {
+	    final String deliveryGroupCode, final LocalDateTime date, String productName, String ean,
+	    LocalDateTime deliveryDate) {
 	final Long orderNumber = Long.parseLong(orderId);
 	final Long lineNumber = Long.parseLong(lineNo);
 	Order order = loadOrder(orderNumber);
@@ -51,10 +52,11 @@ public class OrderTrackingService {
 	    if (null == lineToDelivryGroup) {
 		deliveryGroup = getDeliveryGroup(order, fulfilmentSourceType, deliveryGroupCode);
 		if (null == deliveryGroup) {
-		    deliveryGroup = createNewDeliveryGroup(order, fulfilmentSourceType, deliveryGroupCode);
+		    deliveryGroup = createNewDeliveryGroup(order, fulfilmentSourceType, deliveryGroupCode,
+			    deliveryDate);
 		}
 		deliveryGroups.add(deliveryGroup);
-		line = new Line(lineNumber, status, deliveryGroup, null);
+		line = new Line(lineNumber, status, deliveryGroup, null, productName, ean);
 		lines.add(line);
 		deliveryGroup.setLines(lines);
 	    } else {
@@ -78,12 +80,13 @@ public class OrderTrackingService {
 	    order = new Order();
 	    order.setOrderId(orderNumber);
 
-	    deliveryGroup = createNewDeliveryGroup(order, fulfilmentSourceType, deliveryGroupCode);
+	    deliveryGroup = createNewDeliveryGroup(order, fulfilmentSourceType, deliveryGroupCode, deliveryDate);
 
 	    final LineFulfillmentEvent lineFulfillmentEvent = new LineFulfillmentEvent(status, true,
 		    fetchOrdering(fulfilmentSourceType, status), date, quantity, null, refernceNumber, refernceType);
 
-	    line = new Line(lineNumber, status, deliveryGroup, new HashSet<>(Arrays.asList(lineFulfillmentEvent)));
+	    line = new Line(lineNumber, status, deliveryGroup, new HashSet<>(Arrays.asList(lineFulfillmentEvent)),
+		    productName, ean);
 	    lineFulfillmentEvent.setLine(line);
 	    addLineFulfillmentEvent(line, lineFulfillmentEvent);
 
@@ -123,8 +126,8 @@ public class OrderTrackingService {
     }
 
     private DeliveryGroup createNewDeliveryGroup(final Order order, final String fulfilmentSourceType,
-	    final String deliveryGroupCode) {
-	return new DeliveryGroup(fulfilmentSourceType, deliveryGroupCode, order);
+	    final String deliveryGroupCode, LocalDateTime deliveryDate) {
+	return new DeliveryGroup(fulfilmentSourceType, deliveryGroupCode, order, deliveryDate);
     }
 
     private DeliveryGroup getDeliveryGroup(final Order order, final String fulfilmentSourceType,

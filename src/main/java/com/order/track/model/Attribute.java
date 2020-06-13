@@ -1,8 +1,11 @@
 package com.order.track.model;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.order.track.entity.Line;
 
 import lombok.Getter;
 import lombok.NonNull;
@@ -12,18 +15,9 @@ import lombok.Setter;
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Attribute {
-    @NonNull
-    private String fulfilmentSourceType;
-    @NonNull
-    private String deliveryGroupCode;
-    @NonNull
-    private String currentStatus;
-    private String trackingUrl;
-    @NonNull
-    private List<LifeCycle> lifeCycles;
 
-    public String TrackingUrl() {
-	return "DISPATCHED".equals(currentStatus) ? "https://www.parcelforce.com/track-trace?trackNumber=SF3778426001"
-		: trackingUrl;
-    }
+    private DeliveryAddress deliveryAddress;
+    private String fulfillmentType;
+    private List<DeliveryGroup> deliveryGroups =  new ArrayList<>();
+
 }

@@ -1,5 +1,7 @@
 package com.order.track.controller;
 
+import static com.order.track.util.Util.loadInputStreamAsByteArrayOutputStream;
+
 import java.io.IOException;
 import java.time.LocalDateTime;
 
@@ -13,7 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.order.track.adapter.OrderTrackingAdapter;
+import com.order.track.model.GetOrderResponse;
 import com.order.track.model.TrackOrder;
 
 @RestController
@@ -21,6 +25,8 @@ public class OrderTrackingController {
 
     @Autowired
     private OrderTrackingAdapter orderTrackingAdapter;
+
+    private static ObjectMapper mObjectMapper = new ObjectMapper();
 
     @RequestMapping(value = "/internal/trackOrder/{orderNumber}", method = RequestMethod.GET, produces = "application/json")
     public TrackOrder trackOrderInternal(@PathVariable final String orderNumber)
@@ -32,6 +38,16 @@ public class OrderTrackingController {
     public TrackOrder trackOrderExternal(@PathVariable final String orderNumber, @RequestParam final String type)
 	    throws JsonParseException, JsonMappingException, IOException {
 	return orderTrackingAdapter.loadOrder(orderNumber, type);
+    }
+
+    @RequestMapping(value = "/order/{orderNumber}", method = RequestMethod.GET, produces = "application/json")
+    public GetOrderResponse getOrder() throws IOException {
+
+	return mObjectMapper.readValue(
+		loadInputStreamAsByteArrayOutputStream(getClass().getResourceAsStream("/test/order/order.json"))
+			.toString(),
+		GetOrderResponse.class);
+
     }
 
     /*
@@ -51,10 +67,13 @@ public class OrderTrackingController {
 	    @RequestParam(value = "quantity", required = true) final String quantity,
 	    @RequestParam(value = "refernceNumber", required = false) final String refernceNumber,
 	    @RequestParam(value = "refernceType", required = false) final String refernceType,
-	    @RequestParam("datetime") @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss") final LocalDateTime date)
+	    @RequestParam(value = "fulfillment date", required = false) @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss") final LocalDateTime date,
+	    @RequestParam(value = "productName", required = false) final String productName,
+	    @RequestParam(value = "ean", required = false) final String ean,
+	    @RequestParam(value = "deliveryDate", required = false) @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss") final LocalDateTime deliveryDate)
 	    throws IOException {
 	return orderTrackingAdapter.fulfilOrder(orderNumber, lineNumber, status, quantity, refernceNumber, refernceType,
-		fulfilmentSourceType, deliveryGroupCode, date);
+		fulfilmentSourceType, deliveryGroupCode, date, productName, ean, deliveryDate);
 
     }
 }

@@ -27,6 +27,9 @@ public class GlobalConfiguration {
 
     @Value("#{${statusConfigInternal}}")
     private Map<String, String> statusConfigInternal;
+    
+    @Value("#{${fulfillmentTypes}}")
+    private Map<String, String> fulfillmentTypes;
 
     public Map<String, Map<String, String>> fetchStatusMetrix() {
 

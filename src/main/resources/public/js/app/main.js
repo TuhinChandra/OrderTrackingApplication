@@ -9,11 +9,13 @@ function fetchTrackingData() {
     //search text have some value https://jsonkeeper.com/b/
     var template = '',
         //requestURL = "https://jsonkeeper.com/b/" + $('.search-text').val(); 
-        requestURL = "http://localhost:8085/trackOrder/" + $('.search-text').val()+"?type="+$("input[name='user-type']:checked").val(); 
+        getOrderUrl = "http://localhost:8085/order/11"; 
+		trackOrderUrl = "http://localhost:8085/trackOrder/" + $('.search-text').val()+"?type="+$("input[name='user-type']:checked").val();  
+		
 
 	$.ajax({
      type : "GET",
-     url : requestURL,
+     url : trackOrderUrl,
 	 dataType : "json"
      }).done(function(response) {
              
@@ -21,54 +23,53 @@ function fetchTrackingData() {
         var responseData = response.data;
         if (responseData.id) {
             var index=0;
-            responseData.attributes.map(lineItem => {
-                var currentStatus = lineItem.currentStatus,
-                trackingUrl = lineItem.trackingUrl,
-                statusList = lineItem.lifeCycles,
+			template = template + 
+			`<h2>Order #${responseData.id}</h2>
+			<p>Date ordered ${responseData.dateTimeCreated}</p>
+			<p>Order status ${responseData.orderStatus}</p>`;
+				
+				responseData.attributes.map(attribute => {
+				
+				template	= template + `<h2>${attribute.fulfillmentType}</h2>`;
+				
+				if(attribute.deliveryAddress){
+				
+				template	= template + `<p>DELIVERY ADDRESS</p>
+				<p>${attribute.deliveryAddress.houseName},${attribute.deliveryAddress.addressLine1}</p>
+				<p>${attribute.deliveryAddress.addressLine2},${attribute.deliveryAddress.city}</p>
+				<p>${attribute.deliveryAddress.county},${attribute.postalCode}</p>`;
+				
+				}
+					
+				
+            attribute.deliveryGroups.map(group => {
+                var currentStatus = group.currentStatus,
+                trackingUrl = group.trackingUrl,
+                statusList = group.lifeCycles,
                 currentStatus = '',
                 currentRefType='',
                 currentRefNumber = '';
                 index = index+1;
-
-                template = template + 
-                    `<h3 class="accordion-header">Shipment ${index} of ${responseData.attributes.length}</h3>
-                    <div class="inner-content">
-                        <div class="container">
-                            <ul class="progressbar">`;
-                statusList.map(statusItem => {
-                    var statusWidth = 100/statusList.length;
-                    var date = statusItem.date? statusItem.date : '';
-                    if (statusItem.completed) {
-                        template = template + `<li class="complete" style = "width :${statusWidth}%">${statusItem.status}<span class="date">${date}</span></li>`;
-                        currentRefType = statusItem.refernceType;
-                        currentRefNumber = statusItem.refernceNumber;
-                    }
-                    else if(currentStatus) {
-                        template = template + `<li style = "width :${statusWidth}%">${statusItem.status}<span class="date">${date}</span></li>`;
-                    }
-                    else {
-                        template = template + `<li style = "width :${statusWidth}%">${statusItem.status}</li>`;
-                    }
-                    currentStatus = statusItem.completed;          
-                })
-                template = template + 
-                            `</ul></div>
-                            <p class="info"><span></span><strong>Order Reference : <em>${currentRefType}</em></strong></p>
-                            <p class="info"><span></span><strong>Order Reference number: <em>${currentRefNumber}</em></strong></p>
-                             `
-                if (trackingUrl) {
-                    template = template + 
-                    `<p class="info-track"><span></span><strong>Track your Order from:</strong> <a href="${trackingUrl}">${trackingUrl}</a></p>`
-                }
-                template = template + `</div>` // inner content div
+				
+				 template = template + 
+                    `<p class="red">Estimated delivery date ${group.deliveryDate}</p>`;
+					
+					
+				group.lines.map(lineItem => {
+					
+					template = template + `
+					
+					<p><img src="images/pic01.jpg" alt="" width="50" height="50" class="alignleft">${lineItem.productName}<br/>Product code : ${lineItem.productName}</p>`
+				
+					
+				})
+     
             })
-            $('#accordion').accordion('destroy');
-            $("#accordion").html(template);
-            $( "#accordion").accordion({
-                heightStyle: "content",
-                collapsible: true,
-                animate: 200
-            });
+			
+		})
+
+            $("#content_right").html(template);
+
         }
         else {
             $("#accordion").html( `<p class="error"><span></span>No order details found</p>`);
