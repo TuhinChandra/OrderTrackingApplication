@@ -25,12 +25,12 @@ function fetchTrackingData() {
             var index=0;
 			template = template + 
 			`<h2>Order #${responseData.id}</h2>
-			<p>Date ordered ${responseData.dateTimeCreated}</p>
+			<p>Date ordered ${responseData.createdDate}</p>
 			<p>Order status ${responseData.orderStatus}</p>`;
 				
 				responseData.attributes.map(attribute => {
 				
-				template	= template + `<h2>${attribute.fulfillmentType}</h2>`;
+				template	= template + `<h2><b>${attribute.fulfillmentType}</b></h2>`;
 				
 				if(attribute.deliveryAddress){
 				
@@ -59,7 +59,7 @@ function fetchTrackingData() {
 					
 					template = template + `
 					
-					<p><img src="images/pic01.jpg" alt="" width="50" height="50" class="alignleft">${lineItem.productName}<br/>Product code : ${lineItem.productName}</p>`
+					<p><img src="images/pic01.jpg" alt="" width="50" height="50" class="alignleft">${lineItem.productName}<br/>Product code : ${lineItem.ean}</p>`
 				
 					
 				})
