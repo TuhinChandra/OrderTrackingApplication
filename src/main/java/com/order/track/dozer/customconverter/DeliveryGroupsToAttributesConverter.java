@@ -15,6 +15,7 @@ import com.github.dozermapper.core.Mapper;
 import com.order.track.configuration.GlobalConfiguration;
 import com.order.track.entity.DeliveryGroup;
 import com.order.track.model.Attribute;
+import com.order.track.model.DeliveryAddress;
 
 @Component
 public class DeliveryGroupsToAttributesConverter implements CustomConverter {
@@ -54,7 +55,10 @@ public class DeliveryGroupsToAttributesConverter implements CustomConverter {
 	    mapper.map(deliveryGroup, delGrp);
 
 	    attribute.getDeliveryGroups().add(delGrp);
-
+	    if ("Home Delivery".equals(fulfillmentType)) {
+		attribute.setDeliveryAddress(new DeliveryAddress("B&Q House", "Chestnut Ave", "Chandler's Ford",
+			"Eastleigh", "Hampshire", "GB", "SO53 3LE"));
+	    }
 	    attributes.put(fulfillmentType, attribute);
 
 	}
