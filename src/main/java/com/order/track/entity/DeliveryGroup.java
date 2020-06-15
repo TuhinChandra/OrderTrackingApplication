@@ -1,8 +1,9 @@
 
 package com.order.track.entity;
 
-import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -38,10 +39,10 @@ public class DeliveryGroup {
 	private Order order;
 
 	@OneToMany(mappedBy = "deliveryGroup", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private Set<Line> lines;
+	private Set<Line> lines = new HashSet<>();
 
 	@OneToMany(mappedBy = "deliveryGroup", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private Set<GroupFulfillmentEvent> fulfillmentEvents;
+	private Set<GroupFulfillmentEvent> fulfillmentEvents = new HashSet<>();
 	private Date deliveryDate;
 
 	public DeliveryGroup(final String fulfilmentSourceType, final String deliveryGroupCode, final String currentStatus,
@@ -54,12 +55,29 @@ public class DeliveryGroup {
 		this.lines = lines;
 	}
 
-	public DeliveryGroup(final String fulfilmentSourceType, final String deliveryGroupCode, final Order order, Date deliveryDate) {
+	public DeliveryGroup(final String fulfilmentSourceType, final String deliveryGroupCode, final Order order,
+			final Date deliveryDate) {
 		super();
 		this.fulfilmentSourceType = fulfilmentSourceType;
 		this.deliveryGroupCode = deliveryGroupCode;
 		this.order = order;
-		this.deliveryDate=deliveryDate;
+		this.deliveryDate = deliveryDate;
 	}
 
+	@Override
+	public boolean equals(final Object line) {
+
+		if (line == this)
+			return true;
+		if (!(line instanceof DeliveryGroup)) {
+			return false;
+		}
+		return Objects.equals(deliveryGroupCode, ((DeliveryGroup) line).getDeliveryGroupCode())
+				&& Objects.equals(fulfilmentSourceType, ((DeliveryGroup) line).getFulfilmentSourceType());
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(fulfilmentSourceType, deliveryGroupCode);
+	}
 }

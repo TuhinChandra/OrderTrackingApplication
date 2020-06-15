@@ -1,6 +1,6 @@
 package com.order.track.entity;
 
-import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -21,7 +21,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "LineFulfillmentEvent")
-public class LineFulfillmentEvent {
+public class LineFulfillmentEvent implements Comparator<LineFulfillmentEvent> {
 	@GeneratedValue
 	@Id
 	@JsonIgnore
@@ -37,8 +37,8 @@ public class LineFulfillmentEvent {
 	@JsonIgnore
 	private Line line;
 
-	public LineFulfillmentEvent(final String status, final boolean completed, final int ordering,
-			final Date   date, final int quantity, final Line line,final String refernceNumber, final String refernceType) {
+	public LineFulfillmentEvent(final String status, final boolean completed, final int ordering, final Date date,
+			final int quantity, final Line line, final String refernceNumber, final String refernceType) {
 		this.status = status;
 		this.completed = completed;
 		this.ordering = ordering;
@@ -47,6 +47,11 @@ public class LineFulfillmentEvent {
 		this.line = line;
 		this.refernceNumber = refernceNumber;
 		this.refernceType = refernceType;
+	}
+
+	@Override
+	public int compare(final LineFulfillmentEvent arg0, final LineFulfillmentEvent arg1) {
+		return arg0.getOrdering() - arg1.getOrdering();
 	}
 
 }

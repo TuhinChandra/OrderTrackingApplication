@@ -1,5 +1,6 @@
 package com.order.track.entity;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -28,6 +29,14 @@ public class Order {
 	private String currentStatus;
 
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private Set<DeliveryGroup> deliveryGroups;
+	private Set<DeliveryGroup> deliveryGroups = new HashSet<>();
+
+	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<Line> lines = new HashSet<>();
+
+	public Order(final Long orderId) {
+		super();
+		this.orderId = orderId;
+	}
 
 }
