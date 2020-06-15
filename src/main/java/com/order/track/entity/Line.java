@@ -34,6 +34,7 @@ public class Line {
 	private DeliveryGroup deliveryGroup;
 	private String productName;
 	private String ean;
+	private String info;
 
 	@OneToMany(mappedBy = "line", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<LineFulfillmentEvent> fulfillmentEvents;

@@ -1,6 +1,7 @@
 package com.order.track.model;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 import javax.validation.constraints.Pattern;
 
@@ -23,8 +24,8 @@ public class LifeCycle {
     private String refernceType;
     private String refernceNumber;
     private boolean completed;
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private LocalDateTime date;
+    @JsonFormat(pattern = "dd/MM/yyyy HH:MM:SS")
+    private Date date;
 
     public String getRefernceType() {
 	return null == refernceType ? "NA" : refernceType;

@@ -1,6 +1,7 @@
 package com.order.track.entity;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -30,13 +31,13 @@ public class GroupFulfillmentEvent {
     private String refernceNumber;
     private boolean completed = true;
     private int ordering;
-    private LocalDateTime date;
+    private Date date;
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     private DeliveryGroup deliveryGroup;
 
     public GroupFulfillmentEvent(final String status, final boolean completed, final int ordering,
-	    final LocalDateTime date, final DeliveryGroup deliveryGroup, final String refernceNumber,
+	    final Date date, final DeliveryGroup deliveryGroup, final String refernceNumber,
 	    final String refernceType) {
 	this.status = status;
 	this.completed = completed;

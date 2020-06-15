@@ -3,16 +3,16 @@ package com.order.track.controller;
 import static com.order.track.util.Util.loadInputStreamAsByteArrayOutputStream;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -67,10 +67,10 @@ public class OrderTrackingController {
 	    @RequestParam(value = "quantity", required = true) final String quantity,
 	    @RequestParam(value = "refernceNumber", required = false) final String refernceNumber,
 	    @RequestParam(value = "refernceType", required = false) final String refernceType,
-	    @RequestParam(value = "fulfillment date", required = false) @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss") final LocalDateTime date,
+	    @RequestParam(value = "fulfillmentDate", required = false) @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SS'Z'", timezone = "UTC") final Date date,
 	    @RequestParam(value = "productName", required = false) final String productName,
 	    @RequestParam(value = "ean", required = false) final String ean,
-	    @RequestParam(value = "deliveryDate", required = false) @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss") final LocalDateTime deliveryDate)
+	    @RequestParam(value = "deliveryDate", required = false) @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SS'Z'", timezone = "UTC") final Date deliveryDate)
 	    throws IOException {
 	return orderTrackingAdapter.fulfilOrder(orderNumber, lineNumber, status, quantity, refernceNumber, refernceType,
 		fulfilmentSourceType, deliveryGroupCode, date, productName, ean, deliveryDate);

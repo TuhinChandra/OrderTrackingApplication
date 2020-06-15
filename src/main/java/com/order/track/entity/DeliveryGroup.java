@@ -2,6 +2,7 @@
 package com.order.track.entity;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -41,7 +42,7 @@ public class DeliveryGroup {
 
 	@OneToMany(mappedBy = "deliveryGroup", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<GroupFulfillmentEvent> fulfillmentEvents;
-	private LocalDateTime deliveryDate;
+	private Date deliveryDate;
 
 	public DeliveryGroup(final String fulfilmentSourceType, final String deliveryGroupCode, final String currentStatus,
 			final Order order, final Set<Line> lines) {
@@ -53,7 +54,7 @@ public class DeliveryGroup {
 		this.lines = lines;
 	}
 
-	public DeliveryGroup(final String fulfilmentSourceType, final String deliveryGroupCode, final Order order, LocalDateTime deliveryDate) {
+	public DeliveryGroup(final String fulfilmentSourceType, final String deliveryGroupCode, final Order order, Date deliveryDate) {
 		super();
 		this.fulfilmentSourceType = fulfilmentSourceType;
 		this.deliveryGroupCode = deliveryGroupCode;

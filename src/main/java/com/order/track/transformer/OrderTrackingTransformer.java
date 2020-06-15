@@ -6,12 +6,15 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.github.dozermapper.core.Mapper;
 import com.order.track.configuration.GlobalConfiguration;
+import com.order.track.entity.Line;
+import com.order.track.entity.LineFulfillmentEvent;
 import com.order.track.entity.Order;
 import com.order.track.model.Attribute;
 import com.order.track.model.DeliveryGroup;
@@ -58,15 +61,15 @@ public class OrderTrackingTransformer {
 
 		    buildIncompleteStatues(deliveryGroup, fulfilmentSourceType, eligibleStatuses);
 
-		    deliveryGroup.setCurrentStatus(
-			    globalConfiguration.getStatusConfig(type).get(deliveryGroup.getCurrentStatus()));
+		    final Map<String, String> statusConfig = globalConfiguration.getStatusConfig(type);
+		    deliveryGroup.setCurrentStatus(statusConfig.get(deliveryGroup.getCurrentStatus()));
 
 		    final Map<String, LifeCycle> lifeCycleMap = new HashMap<>();
 		    for (final LifeCycle lifeCycle : deliveryGroup.getLifeCycles()) {
-			lifeCycle.setStatus(globalConfiguration.getStatusConfig(type).get(lifeCycle.getStatus()));
+			lifeCycle.setStatus(statusConfig.get(lifeCycle.getStatus()));
 			if (lifeCycleMap.containsKey(lifeCycle.getStatus())) {
 			    if (lifeCycle.getDate() != null && lifeCycleMap.get(lifeCycle.getStatus()).getDate() != null
-				    & lifeCycleMap.get(lifeCycle.getStatus()).getDate().isBefore(lifeCycle.getDate())) {
+				    & lifeCycleMap.get(lifeCycle.getStatus()).getDate().before(lifeCycle.getDate())) {
 				lifeCycleMap.put(lifeCycle.getStatus(), lifeCycle);
 			    }
 			} else {
@@ -88,6 +91,8 @@ public class OrderTrackingTransformer {
 		    });
 		    deliveryGroup.setLifeCycles(lifeCycles);
 
+		    buildLineInfo(deliveryGroup, statusConfig);
+
 		}
 
 	    }
@@ -95,6 +100,51 @@ public class OrderTrackingTransformer {
 	    trackOrder = buildOrderNotFoundResponse();
 	}
 	return trackOrder;
+
+    }
+
+    private void buildLineInfo(DeliveryGroup deliveryGroup, Map<String, String> statusConfig) {
+
+	for (final Line line : deliveryGroup.getLines()) {
+
+	    final List<LineFulfillmentEvent> fulfillmentEvents = new ArrayList<>(line.getFulfillmentEvents());
+
+	    final int orderQuantity = fulfillmentEvents.stream().filter(e -> "SO_CREATED".equals(e.getStatus()))
+		    .map(LineFulfillmentEvent::getQuantity).findFirst().orElse(0);
+
+	    Collections.sort(fulfillmentEvents, (e1, e2) -> {
+		return e1.getOrdering() - e2.getOrdering();
+	    });
+
+	    final int latestStatusQuantity = fulfillmentEvents.get(fulfillmentEvents.size() - 1).getQuantity();
+
+	    final List<String> orderings = new ArrayList<>(
+		    globalConfiguration.fetchStatusMetrix().get(deliveryGroup.getFulfilmentSourceType()).values());
+
+	    Collections.sort(orderings, Collections.reverseOrder());
+
+	    final Optional<LineFulfillmentEvent> fulfillmentEvent = fulfillmentEvents.stream()
+		    .filter(e -> orderings.get(0).equals(e.getOrdering()) && e.isCompleted()).findFirst();
+
+	    String info = null;
+
+	    if (latestStatusQuantity == 0) {
+
+		info = "Zero stock , items will be cancelled";
+
+	    } else if (latestStatusQuantity < orderQuantity) {
+
+		info = "Low stock , Full quantity of this item will not be delivered";
+
+	    } else if (fulfillmentEvent.isPresent()) {
+
+		info = statusConfig.get(fulfillmentEvent.get().getStatus());
+
+	    }
+
+	    line.setInfo(info);
+
+	}
 
     }
 
@@ -160,7 +210,7 @@ public class OrderTrackingTransformer {
 			lifeCycle.setStatus(globalConfiguration.getStatusConfig("external").get(lifeCycle.getStatus()));
 			if (lifeCycleMap.containsKey(lifeCycle.getStatus())) {
 			    if (lifeCycle.getDate() != null && lifeCycleMap.get(lifeCycle.getStatus()).getDate() != null
-				    & lifeCycleMap.get(lifeCycle.getStatus()).getDate().isBefore(lifeCycle.getDate())) {
+				    & lifeCycleMap.get(lifeCycle.getStatus()).getDate().before(lifeCycle.getDate())) {
 				lifeCycleMap.put(lifeCycle.getStatus(), lifeCycle);
 			    }
 			} else {

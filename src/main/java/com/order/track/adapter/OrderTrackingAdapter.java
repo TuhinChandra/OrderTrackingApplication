@@ -1,7 +1,7 @@
 package com.order.track.adapter;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,8 +44,8 @@ public class OrderTrackingAdapter {
 
     public TrackOrder fulfilOrder(final String orderId, final String lineNo, final String status, final String quantity,
 	    final String refernceNumber, final String refernceType, final String fulfilmentSourceType,
-	    final String deliveryGroupCode, final LocalDateTime date, String productName, String ean,
-	    LocalDateTime deliveryDate) throws IOException {
+	    final String deliveryGroupCode, final Date date, String productName, String ean, Date deliveryDate)
+	    throws IOException {
 
 	return orderTrackingTransformer.transformToTrackOrderInternal(
 		orderTrackingService.fulfilOrder(orderId, lineNo, status, quantity, refernceNumber, refernceType,

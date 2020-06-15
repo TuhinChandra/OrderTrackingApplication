@@ -1,7 +1,7 @@
 package com.order.track.service;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,8 +31,7 @@ public class OrderTrackingService {
 
     public Order fulfilOrder(final String orderId, final String lineNo, final String status, final String lineQuantity,
 	    final String refernceNumber, final String refernceType, final String fulfilmentSourceType,
-	    final String deliveryGroupCode, final LocalDateTime date, String productName, String ean,
-	    LocalDateTime deliveryDate) {
+	    final String deliveryGroupCode, final Date date, String productName, String ean, Date deliveryDate) {
 	final Long orderNumber = Long.parseLong(orderId);
 	final Long lineNumber = Long.parseLong(lineNo);
 	Order order = loadOrder(orderNumber);
@@ -123,10 +122,11 @@ public class OrderTrackingService {
 	    lineFulfillmentEvents = new HashSet<>();
 	}
 	lineFulfillmentEvents.add(lineFulfillmentEvent);
+	line.setFulfillmentEvents(lineFulfillmentEvents);
     }
 
     private DeliveryGroup createNewDeliveryGroup(final Order order, final String fulfilmentSourceType,
-	    final String deliveryGroupCode, LocalDateTime deliveryDate) {
+	    final String deliveryGroupCode, Date deliveryDate) {
 	return new DeliveryGroup(fulfilmentSourceType, deliveryGroupCode, order, deliveryDate);
     }
 
