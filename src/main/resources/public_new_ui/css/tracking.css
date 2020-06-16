@@ -1,0 +1,212 @@
+h1 {
+    text-align: center;
+    margin: 20px 50px;
+    padding: 20px;
+    background-color: #1862a7;
+    color: #fff;
+}
+h1 span {
+    background-image: url("../images/sprite.png");
+    background-position: -250px -150px;
+    height: 60px;
+    width: 65px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 15px;
+    position: relative;
+    text-indent: -99999px;
+    overflow: hidden;
+    background-repeat: no-repeat;
+}
+form {
+    margin: 10px 60px;
+}
+/*radio*/
+.user-type {
+    margin: 10px 30px;
+    border:1px solid #ddd;
+    border-radius: 20px;
+    float: left;
+}
+.user-type label {
+    float:left;
+    width:auto;
+    cursor: pointer;
+    overflow:auto;       
+}
+.user-type label span {
+    text-align:center;
+    font-size: 18px;
+    padding:5px 10px;
+    display:block;
+    color: #888;
+}
+.user-type label input {
+    position:absolute;
+    top:-20px;
+}
+.user-type input:checked + span {
+    background-color:#1862a7;
+    color:#fff;
+    border-radius: 20px;
+}
+/*end - radio*/
+input[type='text'] {
+    font-size: 1.5em;
+    line-height: .833;
+    border: 2px solid  #000;
+    -webkit-box-shadow: none;
+    outline: -webkit-focus-ring-color auto 2px;
+    box-shadow: none;
+    float: none;
+    height: 50px;
+    margin: 0 .5em 0 .5em;
+    overflow: hidden;
+    padding: 0 2.75em 0 .833em;
+    width: 30%;
+}
+.search-button {
+    cursor: pointer;
+    background-image: url("../images/search.png");
+    height: 40px;
+    font-weight: 700;
+}
+.ui-accordion-content {
+    min-height: 100px;
+}
+.container {
+    width: 100%;
+    height: 100px;
+}
+
+.progressbar {
+    /*counter-reset: step;*/
+    margin: 20px 0;
+}
+.progressbar li {
+    list-style-type: none;
+    float: left;
+    width: 25%;
+    position: relative;
+    text-align: center; 
+    margin-bottom: 20px;  
+    font-weight: 700;
+}
+.progressbar li:before {
+    /*content:counter(step);
+    counter-increment: step;*/
+    content:'\2B24';
+    width: 30px;
+    height:30px;
+    border: 2px solid #ddd;
+    display: block;
+    text-align: center;
+    margin: 0 auto 10px  auto;
+    border-radius: 50%;
+    line-height: 30px;
+    background-color: #fff;
+    font-weight: bold;
+}
+
+.progressbar li:after {
+    content:'';
+    position: absolute;
+    width: 100%;
+    height: 3px;
+    background-color: #ddd;
+    top: 15px;
+    left: -50%;
+    z-index: -1;
+}
+.progressbar li:first-child:after {
+    content: none;
+}
+
+.progressbar li.complete {
+    color: #3CB371;
+}
+.progressbar li.complete:before {
+    border-color: #3CB371;
+    content:'\2713';
+}
+.progressbar li.complete + li:after {
+    background-color: #3CB371;
+}
+.progressbar li.in-progress:before {
+    border-color: #ffe500;
+    background-color:  #ffe500;
+}
+.progressbar li span{
+    display: block;
+    font-size: 12px;
+    color: #000;
+}
+.accordion-content {
+    margin: 20px 50px;
+}
+.accordion-content .accordion-header {
+    color: #fff;
+    background-color: #1862a7;
+    padding: 15px;
+    cursor: pointer;
+}
+.accordion-content .accordion-header span {
+    background-image: url("../images/sprite.png");
+    background-position: -940px -1240px;
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 15px;
+    position: relative;
+    text-indent: -99999px;
+    overflow: hidden;
+    background-repeat: no-repeat;
+}
+.accordion-content .accordion-header.ui-accordion-header-active span {
+    background-position: -900px -1240px;
+}
+.accordion-content .inner-content {
+    padding: 0 10px;
+    border: 2px solid #1862a7;
+}
+
+.error {
+    padding: 30px;
+    background: #fbe6e5;
+    border: 1px dotted #e30303;
+    font-weight: 700;
+}
+
+.error span {
+    background-image: url("../images/sprite.png");
+    background-position: -100px 0;
+    height: 26px;
+    width: 29px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 15px;
+    position: relative;
+    text-indent: -99999px;
+    overflow: hidden;
+    background-repeat: no-repeat;
+}
+
+.info span, .info-track span {
+    background-image: url("../images/sprite.png");
+    background-position: -910px -700px;
+    height: 20px;
+    width: 20px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 15px;
+    position: relative;
+    text-indent: -99999px;
+    overflow: hidden;
+    background-repeat: no-repeat;
+    -ms-transform: rotate(180deg); /* IE 9 */
+    transform: rotate(180deg);
+}
+.info em {
+    color: #666
+}

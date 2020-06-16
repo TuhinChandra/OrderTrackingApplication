@@ -1,115 +1,90 @@
-
 $( document ).ready(function() {
     $( "#accordion" ).accordion();
 });
 
+ 
+
 function fetchTrackingData() {
-	if (!$('.search-text').val())
+    if (!$('.search-text').val())
         return;
     //search text have some value https://jsonkeeper.com/b/
     var template = '',
         //requestURL = "https://jsonkeeper.com/b/" + $('.search-text').val(); 
-        getOrderUrl = "http://localhost:8085/order/11"; 
-		trackOrderUrl = "http://localhost:8085/trackOrder/" + $('.search-text').val()+"?type="+$("input[name='user-type']:checked").val();  
-		
+        requestURL = "http://localhost:8085/trackOrder/" + $('.search-text').val()+"?type="+$("input[name='user-type']:checked").val(); 
 
-	$.ajax({
+ 
+
+    $.ajax({
      type : "GET",
-     url : trackOrderUrl,
-	 dataType : "json"
+     url : requestURL,
+     dataType : "json"
      }).done(function(response) {
              
-			  $("#accordion").html('');
+        $("#accordion").html('');
         var responseData = response.data;
         if (responseData.id) {
             var index=0;
-
-			template = template + 
-			`<h2>Order #${responseData.id}</h2>
-			<p>Date ordered ${responseData.createdDate}</p>
-			<p>Order status ${responseData.orderStatus}</p>`;
-				
-				responseData.attributes.map(attribute => {
-				
-				template	= template + `<h2><b>${attribute.fulfillmentType}</b></h2>`;
-				
-				if(attribute.deliveryAddress){
-				
-				template	= template + `<p>DELIVERY ADDRESS</p>
-				<p>${attribute.deliveryAddress.houseName},${attribute.deliveryAddress.addressLine1}</p>
-				<p>${attribute.deliveryAddress.addressLine2},${attribute.deliveryAddress.city}</p>
-				<p>${attribute.deliveryAddress.county},${attribute.deliveryAddress.postalCode}</p>`;
-				
-				}
-					
-				
-            attribute.deliveryGroups.map(group => {
-                var currentStatus = group.currentStatus,
-                trackingUrl = group.trackingUrl,
-                statusList = group.lifeCycles,
+            responseData.attributes.map(groupItem => {
+                groupItem.deliveryGroups.map (lineItem => {
+                var currentStatus = lineItem.currentStatus,
+                trackingUrl = lineItem.trackingUrl,
+                statusList = lineItem.lifeCycles,
                 currentStatus = '',
                 currentRefType='',
                 currentRefNumber = '';
-                index = index+1;
-				
-				 template = template + 
-                    `<div><p class="red">Estimated delivery date ${group.deliveryDate}</p>`;
-					
-					
-				group.lines.map(lineItem => {
-					
-					template = template + `
-					
-					<p><img src="images/pic01.jpg" alt="" width="50" height="50" class="alignleft">${lineItem.productName}<br/>Product code : ${lineItem.ean}</p>			
-					`
-				
-					
-				})
-				
-				template = template + `<div class="container">
+                index = index+1; 
+
+                template = template + 
+                    `<h3 class="accordion-header">Shipment : ${index} of ${groupItem.fulfillmentType}</h3>
+                    <div class="inner-content">
+                        <div class="container">
                             <ul class="progressbar">`;
-				
-				group.lifeCycles.map(lifeCycle => {
+                statusList.map(statusItem => {
+                    var statusWidth = 100/statusList.length;
+                    var date = statusItem.date? statusItem.date : '';
+                    if (statusItem.completed) {
+                        template = template + `<li class="complete" style = "width :${statusWidth}%">${statusItem.status}<span class="date">${date}</span></li>`;
+                        currentRefType = statusItem.refernceType;
+                        currentRefNumber = statusItem.refernceNumber;
+                    }
+                    else if(currentStatus) {
+                        template = template + `<li style = "width :${statusWidth}%">${statusItem.status}<span class="date">${date}</span></li>`;
+                    }
+                    else {
+                        template = template + `<li style = "width :${statusWidth}%">${statusItem.status}</li>`;
+                    }
+                    currentStatus = statusItem.completed;          
+                })
+                template = template + 
+                            `</ul></div>
+                            <p class="info"><span></span><strong>Order Reference : <em>${currentRefType}</em></strong></p>
+                            <p class="info"><span></span><strong>Order Reference number: <em>${currentRefNumber}</em></strong></p>
+                             `
+                lineItem.lines.map(product =>{
+                    template = template + `<p class="info"><span></span><strong><em>${product.productName}(${product.ean})</em></strong>&nbsp;`;
 					
-					if(lifeCycle.completed) {
-						
-					template = template +	`<li class="complete" style="width :25%">${lifeCycle.status}<span class="date">${lifeCycle.date}</span></li>`;
-					
-					     currentRefType = lifeCycle.refernceType;
-                        currentRefNumber = lifeCycle.refernceNumber;
-						
-					} else {
-						
-						template = template + `<li style="width :25%">${lifeCycle.status}</li>`;
+					if(product.info) {
+						template = template + `${product.info}`;
 					}
 					
+					template = template + `</p>`;
 					
-								
-					
-				})
-			
-		template = template + 	`</ul>`;		
-				
-			template = template + `<p class="info"><span></span><strong>Order Reference : <em>${currentRefType}</em></strong></p>
-                            <p class="info"><span></span><strong>Order Reference number: <em>${currentRefNumber}</em></strong></p>`
-							
-							
-				 if (trackingUrl) {
+                })
+                
+                if (trackingUrl) {
                     template = template + 
-                    `<p class="info-track"><span></span><strong>Track your Order from:</strong> <a href="${trackingUrl}">${trackingUrl}</a></p>`;
-					
-                }			
-							
-                    template = template +  `</div></div>`;
-				
-			
-     
+                    `<p class="info-track"><span></span><strong>Track your Order from:</strong> <a href="${trackingUrl}">${trackingUrl}</a></p>`
+                }
+                template = template + `</div>` // inner content div
             })
-			
-		})
-
-            $("#content_right").html(template);
-
+            $('#accordion').accordion('destroy');
+            $("#accordion").html(template);
+            $( "#accordion").accordion({
+                heightStyle: "content",
+                collapsible: true,
+                animate: 200
+            })
+        });
         }
         else {
             $("#accordion").html( `<p class="error"><span></span>No order details found</p>`);
@@ -117,18 +92,17 @@ function fetchTrackingData() {
              
           }).fail(function(error) {
            // it failed.
-		    $("#accordion").html(`<p class="error"><span></span>Error in fetching data</p>`);
+            $("#accordion").html(`<p class="error"><span></span>Error in fetching data</p>`);
           });
-	
+    
 }
 
 $( '.search-button' ).click(function(e) {
     e.preventDefault();
-	fetchTrackingData();
+    fetchTrackingData();
     
-});
+}); 
 
 $("input[name='user-type']" ).change(function(e) {
-	fetchTrackingData();
-    
+    fetchTrackingData();    
 });
