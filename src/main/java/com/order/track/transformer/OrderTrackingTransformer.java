@@ -56,6 +56,7 @@ public class OrderTrackingTransformer {
 
 					final List<String> eligibleStatuses = new ArrayList<>(
 							globalConfiguration.fetchStatusMetrix().get(fulfilmentSourceType).keySet());
+					eligibleStatuses.remove("SO_CHANGED");
 
 					removeCompleteStatus(deliveryGroup, eligibleStatuses);
 

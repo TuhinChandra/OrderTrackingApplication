@@ -36,18 +36,44 @@ public class OrderFulfillmentService {
 			final String productName, final String ean, final Date deliveryDate) {
 
 		final Order order = createOrderIfNotExists(orderNumber);
-
-		final Line line = retriveOrCreateLineIfNotExists(order, lineNo, status, productName, ean, fulfillmentQuantity);
+		final String incomingStatus = status;
+		final Line line = retriveOrCreateLineIfNotExists(order, lineNo, productName, ean, fulfillmentQuantity);
 
 		final DeliveryGroup deliveryGroup = retriveOrCreateGroupIfNotExists(order, fulfilmentSourceType,
 				deliveryGroupCode, line, deliveryDate);
 
-		generateLineFulfillmentEvent(line, status, fulfillmentQuantity, refernceNumber, refernceType, fulfillmentDate);
-
-		generateDelievryFulfillmentEvent(deliveryGroup, status, refernceNumber, refernceType, fulfillmentDate);
+		if ("SO_CHANGED".equalsIgnoreCase(incomingStatus)) {
+			handleLineQuantityChange(fulfillmentQuantity, line, deliveryGroup);
+		} else {
+			generateLineFulfillmentEvent(line, incomingStatus, fulfillmentQuantity, refernceNumber, refernceType,
+					fulfillmentDate);
+			generateDelievryFulfillmentEvent(deliveryGroup, incomingStatus, refernceNumber, refernceType,
+					fulfillmentDate);
+		}
 
 		deriveOrderStatus(order);
 		return orderRepository.save(order);
+	}
+
+	private void handleLineQuantityChange(final int fulfillmentQuantity, final Line line,
+			final DeliveryGroup deliveryGroup) {
+		line.setQuantity(fulfillmentQuantity);
+		line.setCompleted(true);
+		int latestStateOrdering = 0;
+		LineFulfillmentEvent latestEvent = null;
+		for (final LineFulfillmentEvent event : line.getFulfillmentEvents()) {
+			event.setCompleted(true);
+			event.setQuantity(fulfillmentQuantity);
+			if (event.getOrdering() > latestStateOrdering) {
+				latestStateOrdering = event.getOrdering();
+				latestEvent = event;
+			}
+		}
+		if (null != latestEvent) {
+			line.setCurrentStatus(latestEvent.getStatus());
+			generateDelievryFulfillmentEvent(deliveryGroup, latestEvent.getStatus(), latestEvent.getRefernceNumber(),
+					latestEvent.getRefernceType(), latestEvent.getDate());
+		}
 	}
 
 	private Order createOrderIfNotExists(final Long orderNumber) {
@@ -59,19 +85,19 @@ public class OrderFulfillmentService {
 		return newOrder;
 	}
 
-	private Line retriveOrCreateLineIfNotExists(final Order order, final Long lineNo, final String status,
-			final String productName, final String ean, final int fulfillmentQuantity) {
+	private Line retriveOrCreateLineIfNotExists(final Order order, final Long lineNo, final String productName,
+			final String ean, final int fulfillmentQuantity) {
 		final Set<Line> orderLines = order.getLines();
 		for (final Line line : orderLines) {
 			if (line.getLineNo() == lineNo) {
 				return line;
 			}
 		}
-		return createNewLine(order, lineNo, status, productName, ean, fulfillmentQuantity);
+		return createNewLine(order, lineNo, productName, ean, fulfillmentQuantity);
 	}
 
-	private Line createNewLine(final Order order, final Long lineNo, final String status, final String productName,
-			final String ean, final int fulfillmentQuantity) {
+	private Line createNewLine(final Order order, final Long lineNo, final String productName, final String ean,
+			final int fulfillmentQuantity) {
 		final Line line = new Line(lineNo, null, order, fulfillmentQuantity, productName, ean);
 		order.getLines().add(line);
 		return line;
