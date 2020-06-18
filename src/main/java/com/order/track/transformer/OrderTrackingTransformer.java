@@ -130,6 +130,7 @@ public class OrderTrackingTransformer {
 	    });
 
 	    final int latestStatusQuantity = fulfillmentEvents.get(fulfillmentEvents.size() - 1).getQuantity();
+	    
 
 	    final List<String> orderings = new ArrayList<>(
 		    globalConfiguration.fetchStatusMetrix().get(deliveryGroup.getFulfilmentSourceType()).values());
@@ -140,14 +141,18 @@ public class OrderTrackingTransformer {
 		    .filter(e -> orderings.get(0).equals(e.getOrdering()) && e.isCompleted()).findFirst();
 
 	    String info = null;
+	    
+	    if(orderQuantity==0) {
+		
+		info = "Line item cancelled";
+	    
+	    } else  if (latestStatusQuantity == 0) {
 
-	    if (latestStatusQuantity == 0) {
-
-		info = "Zero stock , items will be cancelled";
+		info = "Currently there is no stock for this item . Amonut will be refunded once it is cancelled";
 
 	    } else if (latestStatusQuantity < orderQuantity) {
 
-		info = "Low stock , Full quantity of this item will not be delivered";
+		info = "We can only deliver " + latestStatusQuantity + " quantity of this item";
 
 	    } else if (fulfillmentEvent.isPresent()) {
 

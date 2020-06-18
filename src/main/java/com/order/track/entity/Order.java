@@ -30,7 +30,11 @@ public class Order {
 
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<DeliveryGroup> deliveryGroups = new HashSet<>();
-
+	
+	/*
+	 * @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch =
+	 * FetchType.EAGER) private Set<Line> cancelledLines = new HashSet<>();
+	 */
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<Line> lines = new HashSet<>();
 
