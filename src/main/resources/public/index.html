@@ -1,33 +1,97 @@
-<!DOCTYPE html>
-<html>
-<title>Order Tracking</title>
-<head>
-    <link rel="stylesheet" href="./css/tracking.css">
-</head>
-<body>
+<html xmlns:th="https://www.thymeleaf.org">
 
-    <h1><span></span>Track Your Order</h1>
-    <form method="get" id="searchbar_form" action="/search" role="search" novalidate="novalidate">
-        <div class="user-type">
-            <label><input type="radio" name="user-type" value="external" checked><span>Customer</span></label>
-            <label><input type="radio" name="user-type" value="internal"><span>Agent</span></label>
-        </div>
-        <input class="search-text" autocomplete="off" type="text" 
-            value="" placeholder="order no.">
-        <input class="search-button" type="submit" value="Search" title="search">
+<style>
+  html * {
+    font-family: Roboto, Verdana, sans-serif;
+  }
+
+  body {
+    max-width: 50em;
+  }
+
+  li {
+    padding: 0.25em;
+  }
+
+  .panel {
+    margin: 1em;
+    padding: 1em;
+    border: 1px solid black;
+    border-radius: 5px;
+  }
+
+  .highlight {
+    background-color: #d6f5d6;
+  }
+
+</style>
+
+<head>
+  <title>Google Cloud BigQuery Demo</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <link type="text/css" href="css/style.css" rel="stylesheet"/>
+</head>
+
+<body>
+<h1>Upload CSV data to BigQuery</h1>
+
+<div class="panel">
+  This application will be working within your BigQuery dataset: <b>[[${datasetName}]]</b>
+</div>
+
+<div class="panel">
+  <h2>Control Panel</h2>
+
+  <p>
+    You can upload CSV files from your computer to a BigQuery table of your choosing.
+    If the BigQuery table does not exist, it will be created for you; the
+    schema of the table will be inferred from the first CSV file you upload to the table.
+  </p>
+
+  <div class="panel highlight">
+    <form method="POST" enctype="multipart/form-data" action="/uploadFile">
+
+      <ol>
+        <li>File to upload: <input type="file" name="file"/></li>
+        <li>BigQuery table name: <input type="text" name="tableName"/></li>
+        <li><input type="submit" value="upload"/></li>
+      </ol>
+
     </form>
-     <div id="error-msg" class="error-msg"></div>
-	 <div id="data-content"></div>
-     <!--<h2 class="hd hidden"><span></span>Home Delivery</h2>
-     <div id="accordion-hd" class="accordion-content"></div>
-     <h2 class="cc hidden"><span></span>Click and Collect</h2>
-     <div id="accordion-cc" class="accordion-content"></div>-->
-    </div>
-    
+  </div>
+</div>
+
+<div class="panel">
+  <p>
+    You can also try directly typing comma-separated data into the text field and loading
+    data this way.
+  </p>
+
+  <div class="panel highlight">
+    <form method="POST" action="/uploadCsvText">
+      <ol>
+        <li>
+          CSV rows to upload:
+          <br>
+          <textarea name="csvText" rows="8" cols="30">name,age,location&#10;Joe,34,Austin&#10;Mary,22,New York&#10;Bob,68,Los Angeles</textarea>
+        </li>
+        <li>BigQuery table name: <input type="text" name="tableName"/></li>
+        <li><input type="submit" value="upload"/></li>
+      </ol>
+    </form>
+  </div>
+</div>
+
+<div class="panel">
+  <p>
+    After loading your data, you can view your data in the
+    <a href="https://console.cloud.google.com/bigquery">BigQuery dashboard in Google Cloud Console</a>
+    and clicking 'preview' on the table in your dataset.
+  </p>
+</div>
+
+<div class="panel" th:if="${message}">
+  [[${message}]]
+</div>
 </body>
-<footer>
-        <script src="./js/lib/jquery.js"></script>
-        <script src="./js/lib/jquery-ui-1.10.3.custom.js"></script>
-        <script src="./js/app/main.js"></script>
-</footer>
 </html>
