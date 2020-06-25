@@ -6,8 +6,10 @@ function createGroupItemTemplate(groupItem) {
     var index=0;
         innerTemplate = '';
 		outerTemplate = '';
+		deliveryGroupStatus = '';
         groupItem.deliveryGroups.map (lineItem => {
             var currentStatus = lineItem.currentStatus,
+            deliveryGroupStatus=lineItem.currentStatus,
             trackingUrl = lineItem.trackingUrl,
             statusList = lineItem.lifeCycles,
             currentStatus = '',
@@ -49,11 +51,19 @@ function createGroupItemTemplate(groupItem) {
                 }
                 currentStatus = statusItem.completed;          
             })
-            innerTemplate = innerTemplate + 
-                        `</ul></div>
+            var selectedUserType=$("input[name='user-type']:checked").val();
+            if(selectedUserType=='internal' || (selectedUserType=='external' && deliveryGroupStatus=='Order On the way') ){
+            	innerTemplate = innerTemplate + 
+                       `</ul></div>
                         <p class="info"><span></span><strong>Order Reference : <em>${currentRefType}</em></strong></p>
                         <p class="info"><span></span><strong>Order Reference number: <em>${currentRefNumber}</em></strong></p>
                             `
+                }else {
+                
+             		innerTemplate = innerTemplate +`</ul></div>`
+             	
+             	} 
+             
             lineItem.lines.map(product => {
                 innerTemplate = innerTemplate + `<p class="info"><span></span><strong><em>${product.productName}</em>&nbsp;(</strong><strong><em>${product.ean}</em></strong>)`;
                 

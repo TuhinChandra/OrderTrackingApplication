@@ -77,7 +77,7 @@ public class OrderTrackingTransformer {
 			    lifeCycleMap.put(lifeCycle.getStatus(), lifeCycle);
 			}
 
-			if (lifeCycle.isCompleted() && (lifeCycle.getStatus().equals("On the way")
+			if (lifeCycle.isCompleted() && (lifeCycle.getStatus().equals("Order On the way")
 				|| lifeCycle.getStatus().equals("Items Dispatched"))) {
 
 			    deliveryGroup.setTrackingUrl("https://www.parcelforce.com/track-trace?trackNumber="
