@@ -5,10 +5,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import com.github.dozermapper.core.Mapper;
@@ -31,6 +34,8 @@ public class OrderTrackingTransformer {
     private Mapper mapper;
     @Autowired
     private GlobalConfiguration globalConfiguration;
+    @Autowired
+    private MessageSource messageSource;
 
     /*
      * public TrackOrder transformToTrackOrder(Order order) {
@@ -84,9 +89,9 @@ public class OrderTrackingTransformer {
 
 			    deliveryGroup.setTrackingUrl("https://www.parcelforce.com/track-trace?trackNumber="
 				    + lifeCycle.getRefernceNumber());
-			}
- 
-			if (lifeCycle.getRefernceType() != null && lifeCycle.getRefernceNumber()!=null) {
+			
+			}else if (StringUtils.isNotBlank(lifeCycle.getRefernceType()) && StringUtils.isNotBlank(lifeCycle.getRefernceNumber())) {
+			
 			    references.put(lifeCycle.getRefernceType(), lifeCycle.getRefernceNumber());
 			}
 
@@ -151,15 +156,15 @@ public class OrderTrackingTransformer {
 
 	    if (orderQuantity == 0) {
 
-		info = "Line item cancelled";
+		info = "Product " + line.getProductName() + "is cancelled";
 
 	    } else if (latestStatusQuantity == 0) {
-
-		info = "Currently there is no stock for this item . Amonut will be refunded once it is cancelled";
+		
+		info = messageSource.getMessage("zeroStockWarningMessage",    new Object[] {line.getProductName()}, Locale.ENGLISH);
 
 	    } else if (latestStatusQuantity < orderQuantity) {
 
-		info = "We can only deliver " + latestStatusQuantity + " quantity of this item";
+		info = messageSource.getMessage("lowStockWarningMessage",  new Object[] {latestStatusQuantity,line.getProductName()}, Locale.ENGLISH);
 
 	    } else if (fulfillmentEvent.isPresent()) {
 

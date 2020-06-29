@@ -68,12 +68,10 @@ function createGroupItemTemplate(groupItem) {
              	} 
              
             lineItem.lines.map(product => {
-                innerTemplate = innerTemplate + `<p class="info"><span></span><strong><em>${product.productName}</em>&nbsp;(</strong><strong><em>${product.ean}</em></strong>)`;
-                
+
                 if(product.info) {
-                innerTemplate = innerTemplate + `&nbsp;<b>${product.info}</b>`;
+                	innerTemplate = innerTemplate + `<p class="info"><span></span><strong><em>${product.info}</em></strong></p>`;
                 }
-                innerTemplate = innerTemplate + `</p>`;;
                  
             })
             

@@ -4,12 +4,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.stereotype.Service;
 
 import com.google.common.base.Splitter;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.var;
 
 @Getter
 @Setter
@@ -33,8 +36,19 @@ public class GlobalConfiguration {
 
 	@Value("#{${orderStatusMatrix}}")
 	private Map<String, Integer> orderStatusMatrix;
+	
 	@Value("#{${orderStateMap}}")
 	private Map<Integer, String> orderStateMap;
+	
+	@Bean
+	    public ResourceBundleMessageSource messageSource() {
+
+	        var source = new ResourceBundleMessageSource();
+	        source.setBasenames("resourceBundle");
+	        source.setUseCodeAsDefaultMessage(true);
+
+	        return source;
+	    }
 
 	public Map<String, Map<String, String>> fetchStatusMetrix() {
 
