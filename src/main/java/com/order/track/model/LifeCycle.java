@@ -28,10 +28,10 @@ public class LifeCycle {
     private Date date;
 
     public String getRefernceType() {
-	return null == refernceType ? "NA" : refernceType;
+	return refernceType ;
     }
 
     public String getRefernceNumber() {
-	return null == refernceNumber ? "NA" : refernceNumber;
+	return refernceNumber;
     }
 }

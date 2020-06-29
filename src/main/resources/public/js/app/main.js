@@ -52,12 +52,15 @@ function createGroupItemTemplate(groupItem) {
                 currentStatus = statusItem.completed;          
             })
             var selectedUserType=$("input[name='user-type']:checked").val();
-            if(selectedUserType=='internal' || (selectedUserType=='external' && deliveryGroupStatus=='Order On the way') ){
-            	innerTemplate = innerTemplate + 
-                       `</ul></div>
-                        <p class="info"><span></span><strong>Order Reference : <em>${currentRefType}</em></strong></p>
-                        <p class="info"><span></span><strong>Order Reference number: <em>${currentRefNumber}</em></strong></p>
-                            `
+            
+          
+            if(selectedUserType=='internal' && Object.keys(lineItem.references).length!=0){
+           	innerTemplate = innerTemplate +`</ul></div>`
+	              Object.keys(lineItem.references).forEach(function(key) {
+		    		var value = lineItem.references[key];
+		    		innerTemplate = innerTemplate + 
+	                       `<p class="info"><span></span><strong>${key} : <em>${value}</em></strong></p>`
+				});
                 }else {
                 
              		innerTemplate = innerTemplate +`</ul></div>`

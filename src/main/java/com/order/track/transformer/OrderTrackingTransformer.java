@@ -52,6 +52,8 @@ public class OrderTrackingTransformer {
 
 		for (final DeliveryGroup deliveryGroup : attribute.getDeliveryGroups()) {
 
+		    Map<String, String> references = new HashMap<String, String>();
+
 		    final String fulfilmentSourceType = deliveryGroup.getFulfilmentSourceType();
 
 		    final List<String> eligibleStatuses = new ArrayList<>(
@@ -83,6 +85,10 @@ public class OrderTrackingTransformer {
 			    deliveryGroup.setTrackingUrl("https://www.parcelforce.com/track-trace?trackNumber="
 				    + lifeCycle.getRefernceNumber());
 			}
+ 
+			if (lifeCycle.getRefernceType() != null && lifeCycle.getRefernceNumber()!=null) {
+			    references.put(lifeCycle.getRefernceType(), lifeCycle.getRefernceNumber());
+			}
 
 		    }
 
@@ -93,12 +99,14 @@ public class OrderTrackingTransformer {
 		    deliveryGroup.setLifeCycles(lifeCycles);
 
 		    buildLineInfo(deliveryGroup, statusConfig);
+		    
+		    deliveryGroup.setReferences(references);
 
 		}
 
 	    }
-	    
-	    sortAttributesBasedOnFulfillmentType(trackOrder,trackOrder.getData().getAttributes());
+
+	    sortAttributesBasedOnFulfillmentType(trackOrder, trackOrder.getData().getAttributes());
 
 	} else {
 	    trackOrder = buildOrderNotFoundResponse();
@@ -111,7 +119,7 @@ public class OrderTrackingTransformer {
 	Collections.sort(attributes, (a1, a2) -> {
 	    return a1.getFulfillmentType().compareTo(a2.getFulfillmentType());
 	});
-	
+
 	trackOrder.getData().setAttributes(attributes);
 
     }
@@ -130,7 +138,6 @@ public class OrderTrackingTransformer {
 	    });
 
 	    final int latestStatusQuantity = fulfillmentEvents.get(fulfillmentEvents.size() - 1).getQuantity();
-	    
 
 	    final List<String> orderings = new ArrayList<>(
 		    globalConfiguration.fetchStatusMetrix().get(deliveryGroup.getFulfilmentSourceType()).values());
@@ -141,12 +148,12 @@ public class OrderTrackingTransformer {
 		    .filter(e -> orderings.get(0).equals(e.getOrdering()) && e.isCompleted()).findFirst();
 
 	    String info = null;
-	    
-	    if(orderQuantity==0) {
-		
+
+	    if (orderQuantity == 0) {
+
 		info = "Line item cancelled";
-	    
-	    } else  if (latestStatusQuantity == 0) {
+
+	    } else if (latestStatusQuantity == 0) {
 
 		info = "Currently there is no stock for this item . Amonut will be refunded once it is cancelled";
 

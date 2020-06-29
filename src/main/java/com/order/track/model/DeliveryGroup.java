@@ -2,6 +2,7 @@ package com.order.track.model;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -26,6 +27,7 @@ public class DeliveryGroup {
     private List<LifeCycle> lifeCycles;
     private Set<Line> lines;  
     private LocalDateTime deliveryDate;
+    private Map<String,String> references;
     
 
 }
