@@ -27,5 +27,4 @@ public class IncomingFulfillmentInfo {
 	private Date fulfillmentDate;
 	private String productName;
 	private String ean;
-	private boolean process;
 }

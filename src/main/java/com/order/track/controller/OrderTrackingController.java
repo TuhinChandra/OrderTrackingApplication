@@ -90,16 +90,12 @@ public class OrderTrackingController {
 				file.getInputStream());
 		if (null != incomingFulfillmentInfos && !incomingFulfillmentInfos.isEmpty()) {
 			for (final IncomingFulfillmentInfo incomingFulfillmentInfo : incomingFulfillmentInfos) {
-				if (incomingFulfillmentInfo.isProcess()) {
-					orderFulfillmentService.fulfilOrder(incomingFulfillmentInfo.getOrderNumber(),
-							incomingFulfillmentInfo.getLineNumber(), incomingFulfillmentInfo.getStatus(),
-							incomingFulfillmentInfo.getQuantity(), incomingFulfillmentInfo.getRefernceNumber(),
-							incomingFulfillmentInfo.getRefernceType(),
-							incomingFulfillmentInfo.getFulfilmentSourceType(),
-							incomingFulfillmentInfo.getDeliveryGroupCode(),
-							incomingFulfillmentInfo.getFulfillmentDate(), incomingFulfillmentInfo.getProductName(),
-							incomingFulfillmentInfo.getEan(), null);
-				}
+				orderFulfillmentService.fulfilOrder(incomingFulfillmentInfo.getOrderNumber(),
+						incomingFulfillmentInfo.getLineNumber(), incomingFulfillmentInfo.getStatus(),
+						incomingFulfillmentInfo.getQuantity(), incomingFulfillmentInfo.getRefernceNumber(),
+						incomingFulfillmentInfo.getRefernceType(), incomingFulfillmentInfo.getFulfilmentSourceType(),
+						incomingFulfillmentInfo.getDeliveryGroupCode(), incomingFulfillmentInfo.getFulfillmentDate(),
+						incomingFulfillmentInfo.getProductName(), incomingFulfillmentInfo.getEan(), null);
 			}
 		}
 
