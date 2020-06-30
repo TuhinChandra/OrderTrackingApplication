@@ -156,7 +156,7 @@ public class OrderTrackingTransformer {
 
 	    if (orderQuantity == 0) {
 
-		info = "Product " + line.getProductName() + "is cancelled";
+		info = "Product " + line.getProductName() + " is cancelled";
 
 	    } else if (latestStatusQuantity == 0) {
 		
