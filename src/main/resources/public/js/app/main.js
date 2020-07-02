@@ -31,7 +31,7 @@ function createGroupItemTemplate(groupItem) {
                                  <div class="accordion-content">`
             
             innerTemplate = innerTemplate + 
-                `<h3 class="accordion-header">Shipment : ${index} of ${groupItem.deliveryGroups.length}</h3>
+                `<h3 class="accordion-header">${lineItem.deliveryGroupMsg}</h3>
                 <div class="inner-content">
                     <div class="container">
                         <ul class="progressbar">`;
@@ -66,14 +66,23 @@ function createGroupItemTemplate(groupItem) {
              		innerTemplate = innerTemplate +`</ul></div>`
              	
              	} 
-             
+             	
+             	var prodInfolist = '';
+			innerTemplate = innerTemplate + 
+							`<table class="prod-table"><thead><tr><th>Product Name</th><th>Quantity</th></tr></thead><tbody>`;
             lineItem.lines.map(product => {
-
+				innerTemplate = innerTemplate + 
+								`<tr>
+									<td>${product.productName}</td>
+									<td>${product.quantity}</td>      
+								</tr>`
                 if(product.info) {
-                	innerTemplate = innerTemplate + `<p class="info"><span></span><strong><em>${product.info}</em></strong></p>`;
+                	prodInfolist = prodInfolist + `<p class="info"><span></span><strong><em>${product.info}</em></strong></p>`;
                 }
                  
             })
+            innerTemplate = innerTemplate + `</tbody></table>` + prodInfolist;
+             
             
             if (trackingUrl) {
                 innerTemplate = innerTemplate + 

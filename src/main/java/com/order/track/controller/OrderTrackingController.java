@@ -75,10 +75,12 @@ public class OrderTrackingController {
 			@RequestParam(value = "refernceNumber", required = false) final String refernceNumber,
 			@RequestParam(value = "refernceType", required = false) final String refernceType,
 			@RequestParam(value = "fulfillmentDate", required = false) @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SS'Z'", timezone = "UTC") final Date date,
+			@RequestParam(value = "deliveryDate", required = false) @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SS'Z'", timezone = "UTC") final Date deliveryDate,
 			@RequestParam(value = "productName", required = false) final String productName,
 			@RequestParam(value = "ean", required = false) final String ean) throws IOException {
 		return orderTrackingAdapter.fulfilOrder(orderNumber, lineNumber, status, quantity, refernceNumber, refernceType,
-				fulfilmentSourceType, deliveryGroupCode, date, productName, ean, null);
+				fulfilmentSourceType, deliveryGroupCode, date, productName, ean, deliveryDate);
+		
 
 	}
 
@@ -95,7 +97,7 @@ public class OrderTrackingController {
 						incomingFulfillmentInfo.getQuantity(), incomingFulfillmentInfo.getRefernceNumber(),
 						incomingFulfillmentInfo.getRefernceType(), incomingFulfillmentInfo.getFulfilmentSourceType(),
 						incomingFulfillmentInfo.getDeliveryGroupCode(), incomingFulfillmentInfo.getFulfillmentDate(),
-						incomingFulfillmentInfo.getProductName(), incomingFulfillmentInfo.getEan(), null);
+						incomingFulfillmentInfo.getProductName(), incomingFulfillmentInfo.getEan(), incomingFulfillmentInfo.getDeliveryDate());
 			}
 		}
 

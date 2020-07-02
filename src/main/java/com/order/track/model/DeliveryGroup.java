@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.order.track.entity.Line;
 
@@ -28,6 +29,7 @@ public class DeliveryGroup {
     private Set<Line> lines;  
     private LocalDateTime deliveryDate;
     private Map<String,String> references;
+    private String deliveryGroupMsg;
     
 
 }

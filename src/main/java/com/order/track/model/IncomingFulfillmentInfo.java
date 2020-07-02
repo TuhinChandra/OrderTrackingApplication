@@ -27,4 +27,6 @@ public class IncomingFulfillmentInfo {
 	private Date fulfillmentDate;
 	private String productName;
 	private String ean;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SS'Z'", timezone = "UTC")
+	private Date deliveryDate;
 }

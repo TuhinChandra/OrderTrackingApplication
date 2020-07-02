@@ -40,6 +40,9 @@ public class GlobalConfiguration {
 	@Value("#{${orderStateMap}}")
 	private Map<Integer, String> orderStateMap;
 	
+	@Value("#{${deliveryGroupMsgKey}}")
+	private Map<String, String> deliveryGroupMsgKey;
+	
 	@Bean
 	    public ResourceBundleMessageSource messageSource() {
 

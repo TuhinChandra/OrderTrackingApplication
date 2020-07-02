@@ -1,6 +1,8 @@
 package com.order.track.transformer;
 
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -89,9 +91,10 @@ public class OrderTrackingTransformer {
 
 			    deliveryGroup.setTrackingUrl("https://www.parcelforce.com/track-trace?trackNumber="
 				    + lifeCycle.getRefernceNumber());
-			
-			}else if (StringUtils.isNotBlank(lifeCycle.getRefernceType()) && StringUtils.isNotBlank(lifeCycle.getRefernceNumber())) {
-			
+
+			} else if (StringUtils.isNotBlank(lifeCycle.getRefernceType())
+				&& StringUtils.isNotBlank(lifeCycle.getRefernceNumber())) {
+
 			    references.put(lifeCycle.getRefernceType(), lifeCycle.getRefernceNumber());
 			}
 
@@ -104,9 +107,12 @@ public class OrderTrackingTransformer {
 		    deliveryGroup.setLifeCycles(lifeCycles);
 
 		    buildLineInfo(deliveryGroup, statusConfig);
-		    
+
 		    deliveryGroup.setReferences(references);
 
+		    deliveryGroup.setDeliveryGroupMsg(messageSource.getMessage(
+			    globalConfiguration.getDeliveryGroupMsgKey().get(deliveryGroup.getFulfilmentSourceType()),
+			    new Object[] {DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG).format(deliveryGroup.getDeliveryDate())}, Locale.ENGLISH));
 		}
 
 	    }
@@ -159,12 +165,14 @@ public class OrderTrackingTransformer {
 		info = "Product " + line.getProductName() + " is cancelled";
 
 	    } else if (latestStatusQuantity == 0) {
-		
-		info = messageSource.getMessage("zeroStockWarningMessage",    new Object[] {line.getProductName()}, Locale.ENGLISH);
+
+		info = messageSource.getMessage("zeroStockWarningMessage", new Object[] { line.getProductName() },
+			Locale.ENGLISH);
 
 	    } else if (latestStatusQuantity < orderQuantity) {
 
-		info = messageSource.getMessage("lowStockWarningMessage",  new Object[] {latestStatusQuantity,line.getProductName()}, Locale.ENGLISH);
+		info = messageSource.getMessage("lowStockWarningMessage",
+			new Object[] { latestStatusQuantity, line.getProductName() }, Locale.ENGLISH);
 
 	    } else if (fulfillmentEvent.isPresent()) {
 
