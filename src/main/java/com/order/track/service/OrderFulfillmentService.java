@@ -45,6 +45,11 @@ public class OrderFulfillmentService {
 
 		final DeliveryGroup deliveryGroup = retriveOrCreateGroupIfNotExists(order, fulfilmentSourceType,
 				deliveryGroupCode, line, deliveryDate);
+		if (deliveryGroup.isCancelled()) {
+			System.err.println("deliveryGroup::" + deliveryGroup.getFulfilmentSourceType() + ""
+					+ deliveryGroup.getDeliveryGroupCode() + " is already cancelled. Hence not fulfilling further");
+			return order;
+		}
 
 		if ("SO_CHANGED".equalsIgnoreCase(incomingStatus)) {
 			handleLineQuantityChange(fulfillmentQuantity, line, deliveryGroup);
@@ -174,10 +179,15 @@ public class OrderFulfillmentService {
 				deliveryGroup.getCurrentStatus());
 		final int derivedDeliveryGroupStatusBasedOnLines = deriveDeliveryGroupStatusBasedOnLines(deliveryGroup);
 		GroupFulfillmentEvent groupFulfillmentEvent = null;
+		String incomingStatus = status;
+		if (derivedDeliveryGroupStatusBasedOnLines == Integer.MAX_VALUE) {
+			incomingStatus = "CANCELLED";
+			deliveryGroup.setCancelled(true);
+		}
 		if (derivedDeliveryGroupStatusBasedOnLines > existingLineStatusOrdering) {
-			groupFulfillmentEvent = createDeliveryGroupFulfillmentEvent(deliveryGroup, status, refernceNumber,
+			groupFulfillmentEvent = createDeliveryGroupFulfillmentEvent(deliveryGroup, incomingStatus, refernceNumber,
 					refernceType, fulfillmentDate, derivedDeliveryGroupStatusBasedOnLines);
-			deliveryGroup.setCurrentStatus(status);
+			deliveryGroup.setCurrentStatus(incomingStatus);
 		}
 		return groupFulfillmentEvent;
 
@@ -193,13 +203,18 @@ public class OrderFulfillmentService {
 	}
 
 	private int deriveDeliveryGroupStatusBasedOnLines(final DeliveryGroup deliveryGroup) {
+		int orderingIndex = Integer.MAX_VALUE;
 		final Set<String> lineStauses = deliveryGroup.getLines().stream().filter(line -> !line.isCancelled())
 				.map(Line::getCurrentStatus).collect(Collectors.toSet());
-		final Set<Integer> ordering = new HashSet<>();
-		for (final String status : lineStauses) {
-			ordering.add(fetchOrdering(deliveryGroup.getFulfilmentSourceType(), status));
+		if (null != lineStauses && !lineStauses.isEmpty()) {
+
+			final Set<Integer> ordering = new HashSet<>();
+			for (final String status : lineStauses) {
+				ordering.add(fetchOrdering(deliveryGroup.getFulfilmentSourceType(), status));
+			}
+			orderingIndex = Collections.min(ordering);
 		}
-		return ordering.isEmpty() ? 0 : Collections.min(ordering);
+		return orderingIndex;
 	}
 
 	private void deriveOrderStatus(final Order order) {
