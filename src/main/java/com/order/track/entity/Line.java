@@ -42,6 +42,7 @@ public class Line {
 	private String info;
 	private int quantity;
 	private boolean completed = true;
+	private boolean cancelled;
 
 	@OneToMany(mappedBy = "line", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<LineFulfillmentEvent> fulfillmentEvents = new HashSet<>();

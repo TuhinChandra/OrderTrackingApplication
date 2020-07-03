@@ -34,6 +34,7 @@ public class DeliveryGroup {
 	private String fulfilmentSourceType;
 	private String deliveryGroupCode;
 	private String currentStatus;
+	private boolean cancelled;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonIgnore
 	private Order order;
