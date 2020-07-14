@@ -86,7 +86,11 @@ function createGroupItemTemplate(groupItem) {
             
             if (trackingUrl) {
                 innerTemplate = innerTemplate + 
-                `<p class="info-track"><span></span><strong>Track your Order from:</strong> <a href="${trackingUrl}">${trackingUrl}</a></p>`
+                `<p class="info-track"><span></span><strong>Track `;
+                 if(selectedUserType=='external'){
+                 	innerTemplate = innerTemplate + `your `;
+                 }
+				innerTemplate = innerTemplate + `Order from:</strong> <a href="${trackingUrl}">${trackingUrl}</a></p>`;
             }
             innerTemplate = innerTemplate + `</div>` // inner content div
     })

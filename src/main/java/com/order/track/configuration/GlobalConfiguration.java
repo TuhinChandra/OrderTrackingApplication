@@ -43,6 +43,12 @@ public class GlobalConfiguration {
 	@Value("#{${deliveryGroupMsgKey}}")
 	private Map<String, String> deliveryGroupMsgKey;
 	
+	@Value("#{${cancelledDeliveryGroupMsgKey}}")
+	private Map<String, String> cancelledHomeDeliveryGroupMsg;
+	
+	@Value("#{${deliveryGroupHeaderDateFormat}}")
+	private String deliveryGroupHeaderDateFormat;
+	
 	@Bean
 	    public ResourceBundleMessageSource messageSource() {
 

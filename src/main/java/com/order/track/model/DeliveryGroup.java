@@ -1,6 +1,7 @@
 package com.order.track.model;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -27,7 +28,7 @@ public class DeliveryGroup {
 	@NonNull
 	private List<LifeCycle> lifeCycles;
 	private Set<Line> lines;
-	private LocalDateTime deliveryDate;
+	private Date deliveryDate;
 	private Map<String, String> references;
 	private String deliveryGroupMsg;
 	private boolean cancelled;

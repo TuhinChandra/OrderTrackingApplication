@@ -21,7 +21,7 @@ public class LifeCycle {
 	private String refernceType;
 	private String refernceNumber;
 	private boolean completed;
-	@JsonFormat(pattern = "dd/MM/yyyy hh:mm a", timezone = "UTC")
+	@JsonFormat(pattern = "EEEE MMMMM dd hh:mm a", timezone = "UTC")
 	private Date date;
 
 	public String getRefernceType() {
