@@ -51,21 +51,9 @@ function createGroupItemTemplate(groupItem) {
                 }
                 currentStatus = statusItem.completed;          
             })
-            var selectedUserType=$("input[name='user-type']:checked").val();
-            
-          
-            if(selectedUserType=='internal' && Object.keys(lineItem.references).length!=0){
-           	innerTemplate = innerTemplate +`</ul></div>`
-	              Object.keys(lineItem.references).forEach(function(key) {
-		    		var value = lineItem.references[key];
-		    		innerTemplate = innerTemplate + 
-	                       `<p class="info"><span></span><strong>${key} : <em>${value}</em></strong></p>`
-				});
-                }else {
-                
-             		innerTemplate = innerTemplate +`</ul></div>`
-             	
-             	} 
+            innerTemplate = innerTemplate +`</ul></div>`
+			
+			
              	
              	var prodInfolist = '';
 			innerTemplate = innerTemplate + 
@@ -82,6 +70,17 @@ function createGroupItemTemplate(groupItem) {
                  
             })
             innerTemplate = innerTemplate + `</tbody></table>` + prodInfolist;
+			var selectedUserType=$("input[name='user-type']:checked").val();
+            
+          
+            if(selectedUserType=='internal' && Object.keys(lineItem.references).length!=0){         	
+           	
+	              Object.keys(lineItem.references).forEach(function(key) {
+		    		var value = lineItem.references[key];
+		    		innerTemplate = innerTemplate + 
+	                       `<p class="info"><span></span><strong>${key} : <em>${value}</em></strong></p>`
+				});
+                }
              
             
             if (trackingUrl) {

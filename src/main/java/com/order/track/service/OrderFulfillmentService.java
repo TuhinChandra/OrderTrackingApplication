@@ -124,7 +124,9 @@ public class OrderFulfillmentService {
 		if (null == deliveryGroup) {
 			deliveryGroup = createNewDeliveryGroup(order, fulfilmentSourceType, deliveryGroupCode, deliveryDate);
 		}
-
+		if (null != deliveryDate) {
+			deliveryGroup.setDeliveryDate(deliveryDate);
+		}
 		deliveryGroup.getLines().add(line);
 		line.setDeliveryGroup(deliveryGroup);
 		return deliveryGroup;

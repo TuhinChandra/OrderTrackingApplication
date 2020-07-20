@@ -213,12 +213,13 @@ input[type='text'] {
 	margin: 30px auto;
 	text-align: left;
 	font-size: 14px;
+        width: 85%;
 }	
 
 .prod-table th {
 	background: linear-gradient(#777, #444);
 	color: #fff;
-    font-weight: bold;
+        font-weight: bold;
 	padding: 10px 15px;
 	position: relative;
 	text-shadow: 0 3px #000;	
