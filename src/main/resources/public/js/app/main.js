@@ -103,7 +103,7 @@ function fetchTrackingData() {
     //search text have some value https://jsonkeeper.com/b/
     
         //requestURL = "https://jsonkeeper.com/b/" + $('.search-text').val(); 
-        requestURL = "http://localhost:8085/trackOrder/" + $('.search-text').val()+"?type="+$("input[name='user-type']:checked").val(); 
+        requestURL = "https://order-tracking-app.herokuapp.com/trackOrder/" + $('.search-text').val()+"?type="+$("input[name='user-type']:checked").val(); 
 
  
     $.ajax({
