@@ -239,4 +239,8 @@ public class OrderFulfillmentService {
 		return Optional.ofNullable(globalConfiguration.getOrderStatusMatrix().get(status)).orElse(1);
 
 	}
+
+	public void deleteOrder(final Long orderNumber) {
+		orderRepository.deleteById(orderNumber);
+	}
 }
