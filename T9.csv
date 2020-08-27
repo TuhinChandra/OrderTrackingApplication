@@ -1,0 +1,6 @@
+orderNumber,lineNumber,status,quantity,refernceType,refernceNumber,fulfillmentDate
+100000002,1,DELIVERED,5,Received By,Ayon Mandal,2020-07-09T016:01:00.00Z
+100000003,2,DELIVERED,10,Received By,Abhra Dasgupta,2020-07-05T017:01:00.00Z
+100000003,3,DELIVERED,15,Received By,Abhra Dasgupta,2020-07-10T018:01:00.00Z
+100000006,1,DELIVERED,5,Received By,Rajesh Patil,2020-07-05T010:51:00.00Z
+100000007,1,DELIVERED,5,Received By,Satyaki Banerjee,2020-07-14T010:51:00.00Z

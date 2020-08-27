@@ -14,5 +14,7 @@ public class Data {
     private String type = "order";
     private Long id;
     private String customerId;
+    private String createdDate="16/05/2020";
+    private String orderStatus="Processing";
     private List<Attribute> attributes;
 }

@@ -1,0 +1,324 @@
+{
+  "data": {
+    "type": "order",
+    "id": 10014,
+    "customerId": null,
+    "createdDate": "16/05/2020",
+    "orderStatus": "Processing",
+    "attributes": [
+      {
+        "deliveryAddress": null,
+        "fulfillmentType": "Home Delivery",
+        "deliveryGroups": [
+          {
+            "fulfilmentSourceType": "ZVH",
+            "deliveryGroupCode": "1002",
+            "currentStatus": "Order On the way",
+            "trackingUrl": null,
+            "lifeCycles": [
+              {
+                "status": "Order Placed",
+                "ordering": 1,
+                "refernceType": "NA",
+                "refernceNumber": "NA",
+                "completed": true,
+                "date": "12/06/2020"
+              },
+              {
+                "status": "Order Processing",
+                "ordering": 3,
+                "refernceType": "NA",
+                "refernceNumber": "NA",
+                "completed": true,
+                "date": "12/06/2020"
+              },
+              {
+                "status": "Order On the way",
+                "ordering": 4,
+                "refernceType": "Dispatched",
+                "refernceNumber": "FC1234",
+                "completed": true,
+                "date": "12/06/2020"
+              },
+              {
+                "status": "Order Delivered",
+                "ordering": 5,
+                "refernceType": "NA",
+                "refernceNumber": "NA",
+                "completed": false,
+                "date": null
+              }
+            ],
+            "lines": [
+              {
+                "lineNo": 3,
+                "currentStatus": "DISPATCHED",
+                "productName": "Product D",
+                "ean": "123456",
+				"statusMessage":"some message",
+                "fulfillmentEvents": [
+                  {
+                    "quantity": 1,
+                    "status": "ASN_RECEIVED",
+                    "refernceType": null,
+                    "refernceNumber": null,
+                    "completed": true,
+                    "ordering": 3,
+                    "date": "2020-06-12T16:00:00"
+                  },
+                  {
+                    "quantity": 1,
+                    "status": "DISPATCHED",
+                    "refernceType": "Dispatched",
+                    "refernceNumber": "FC1234",
+                    "completed": true,
+                    "ordering": 4,
+                    "date": "2020-06-12T16:00:00"
+                  },
+                  {
+                    "quantity": 1,
+                    "status": "PO_CREATED",
+                    "refernceType": null,
+                    "refernceNumber": null,
+                    "completed": true,
+                    "ordering": 2,
+                    "date": "2020-06-12T16:00:00"
+                  }
+                ]
+              },
+              {
+                "lineNo": 4,
+                "currentStatus": "ASN_RECEIVED",
+                "productName": "Product D",
+                "ean": "123456",
+				"statusMessage":"some message",
+                "fulfillmentEvents": [
+                  {
+                    "quantity": 1,
+                    "status": "PO_CREATED",
+                    "refernceType": null,
+                    "refernceNumber": null,
+                    "completed": true,
+                    "ordering": 2,
+                    "date": "2020-06-12T16:00:00"
+                  },
+                  {
+                    "quantity": 1,
+                    "status": "ASN_RECEIVED",
+                    "refernceType": null,
+                    "refernceNumber": null,
+                    "completed": true,
+                    "ordering": 3,
+                    "date": "2020-06-12T16:00:00"
+                  }
+                ]
+              }
+            ],
+            "deliveryDate": null
+          },
+          {
+            "fulfilmentSourceType": "ZBFC",
+            "deliveryGroupCode": "1001",
+            "currentStatus": "Order On the way",
+            "trackingUrl": null,
+            "lifeCycles": [
+              {
+                "status": "Order Placed",
+                "ordering": 1,
+                "refernceType": "NA",
+                "refernceNumber": "NA",
+                "completed": true,
+                "date": "12/06/2020"
+              },
+              {
+                "status": "Order Processing",
+                "ordering": 2,
+                "refernceType": "NA",
+                "refernceNumber": "NA",
+                "completed": true,
+                "date": "12/06/2020"
+              },
+              {
+                "status": "Order On the way",
+                "ordering": 3,
+                "refernceType": "NA",
+                "refernceNumber": "NA",
+                "completed": true,
+                "date": "12/06/2020"
+              },
+              {
+                "status": "Order Delivered",
+                "ordering": 4,
+                "refernceType": "NA",
+                "refernceNumber": "NA",
+                "completed": false,
+                "date": null
+              }
+            ],
+            "lines": [
+              {
+                "lineNo": 2,
+                "currentStatus": "DISPATCHED",
+                "productName": "Product D",
+                "ean": "123456",
+				"statusMessage":"some message",
+                "fulfillmentEvents": [
+                  {
+                    "quantity": 1,
+                    "status": "DISPATCHED",
+                    "refernceType": null,
+                    "refernceNumber": null,
+                    "completed": true,
+                    "ordering": 3,
+                    "date": "2020-06-12T16:00:00"
+                  },
+                  {
+                    "quantity": 1,
+                    "status": "DEL_CREATED",
+                    "refernceType": null,
+                    "refernceNumber": null,
+                    "completed": true,
+                    "ordering": 2,
+                    "date": "2020-06-12T16:00:00"
+                  }
+                ]
+              },
+              {
+                "lineNo": 1,
+                "currentStatus": "DISPATCHED",
+                "productName": "Product D",
+                "ean": "123456",
+				"statusMessage":"some message",
+                "fulfillmentEvents": [
+                  {
+                    "quantity": 1,
+                    "status": "SO_CREATED",
+                    "refernceType": null,
+                    "refernceNumber": null,
+                    "completed": true,
+                    "ordering": 1,
+                    "date": "2020-06-12T16:00:00"
+                  },
+                  {
+                    "quantity": 1,
+                    "status": "DISPATCHED",
+                    "refernceType": null,
+                    "refernceNumber": null,
+                    "completed": true,
+                    "ordering": 3,
+                    "date": "2020-06-12T16:00:00"
+                  }
+                ]
+              }
+            ],
+            "deliveryDate": null
+          }
+        ]
+      },
+      {
+        "deliveryAddress": null,
+        "fulfillmentType": "Click & Collect",
+        "deliveryGroups": [
+          {
+            "fulfilmentSourceType": "ZPS",
+            "deliveryGroupCode": "1003",
+            "currentStatus": "Order Processing",
+            "trackingUrl": null,
+            "lifeCycles": [
+              {
+                "status": "Order Placed",
+                "ordering": 1,
+                "refernceType": "NA",
+                "refernceNumber": "NA",
+                "completed": true,
+                "date": "12/06/2020"
+              },
+              {
+                "status": "Order picked",
+                "ordering": 2,
+                "refernceType": "NA",
+                "refernceNumber": "NA",
+                "completed": true,
+                "date": "12/06/2020"
+              },
+              {
+                "status": "Order Processing",
+                "ordering": 3,
+                "refernceType": "NA",
+                "refernceNumber": "NA",
+                "completed": true,
+                "date": "12/06/2020"
+              },
+              {
+                "status": "Order Collected",
+                "ordering": 4,
+                "refernceType": "NA",
+                "refernceNumber": "NA",
+                "completed": false,
+                "date": null
+              }
+            ],
+            "lines": [
+              {
+                "lineNo": 5,
+                "currentStatus": "ALLOCATED",
+                "productName": "Product A",
+                "ean": "123456",
+				"statusMessage":"some message",
+                "fulfillmentEvents": [
+                  {
+                    "quantity": 1,
+                    "status": "ALLOCATED",
+                    "refernceType": null,
+                    "refernceNumber": null,
+                    "completed": true,
+                    "ordering": 3,
+                    "date": "2020-06-12T16:00:00"
+                  },
+                  {
+                    "quantity": 1,
+                    "status": "PICKED",
+                    "refernceType": null,
+                    "refernceNumber": null,
+                    "completed": true,
+                    "ordering": 2,
+                    "date": "2020-06-12T16:00:00"
+                  }
+                ]
+              },
+              {
+                "lineNo": 6,
+                "currentStatus": "ALLOCATED",
+                "productName": "Product A",
+                "ean": "123456",
+				"statusMessage":"some message",
+                "fulfillmentEvents": [
+                  {
+                    "quantity": 1,
+                    "status": "ALLOCATED",
+                    "refernceType": null,
+                    "refernceNumber": null,
+                    "completed": true,
+                    "ordering": 3,
+                    "date": "2020-06-12T16:00:00"
+                  },
+                  {
+                    "quantity": 1,
+                    "status": "PICKED",
+                    "refernceType": null,
+                    "refernceNumber": null,
+                    "completed": true,
+                    "ordering": 2,
+                    "date": "2020-06-12T16:00:00"
+                  }
+                ]
+              }
+            ],
+            "deliveryDate": null
+          }
+        ]
+      }
+    ]
+  }
+}
+//C81Z

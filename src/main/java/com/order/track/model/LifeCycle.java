@@ -1,8 +1,6 @@
 package com.order.track.model;
 
-import java.time.LocalDateTime;
-
-import javax.validation.constraints.Pattern;
+import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -17,20 +15,20 @@ import lombok.ToString;
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class LifeCycle {
-    @NonNull
-    private String status;
-    private int ordering;
-    private String refernceType;
-    private String refernceNumber;
-    private boolean completed;
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private LocalDateTime date;
+	@NonNull
+	private String status;
+	private int ordering;
+	private String refernceType;
+	private String refernceNumber;
+	private boolean completed;
+	@JsonFormat(pattern = "EEEE MMMMM dd hh:mm a", timezone = "UTC")
+	private Date date;
 
-    public String getRefernceType() {
-	return null == refernceType ? "NA" : refernceType;
-    }
+	public String getRefernceType() {
+		return refernceType;
+	}
 
-    public String getRefernceNumber() {
-	return null == refernceNumber ? "NA" : refernceNumber;
-    }
+	public String getRefernceNumber() {
+		return refernceNumber;
+	}
 }
